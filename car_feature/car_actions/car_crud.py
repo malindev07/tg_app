@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from pydantic_core import ErrorType
-
 
 from car_feature.car_model.car_py_model.car_create_model import CarCreate
 from car_feature.car_model.car_py_model.car_py_model import (
