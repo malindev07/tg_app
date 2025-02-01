@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-
+from dataclasses import dataclass, asdict
 
 from car_feature.car_model.car_py_model.car_create_model import CarCreate
 from car_feature.car_model.car_py_model.car_py_model import (
@@ -9,6 +8,7 @@ from car_feature.car_model.car_py_model.car_py_model import (
     CarVIN,
 )
 from car_feature.car_model.car_validator.car_validator import CarValidator
+from db.car_db_dev import cars_storage
 
 
 @dataclass
@@ -29,9 +29,20 @@ class CarAction:
         )
         car_owner = new_car.car_owner
 
-        return Car(
+        car = Car(
             car_id=car_id,
             car_brand_model=car_brand_model,
             car_owner=car_owner,
             car_vin=car_vin,
         )
+        cars_storage.car_storage[car_id.car_id] = asdict(car)
+
+        return car
+
+    @staticmethod
+    def search_car(car_id: CarId):
+        return cars_storage.car_storage[car_id.car_id]
+
+    @staticmethod
+    def show_cars():
+        return cars_storage.car_storage

@@ -1,12 +1,20 @@
 from dataclasses import dataclass
 
-from car_feature.car_model.car_api_model.car_api_model import CarCreateAPI, CarReturnAPI
+from car_feature.car_model.car_api_model.car_api_model import (
+    CarCreateAPI,
+    CarReturnAPI,
+    CarIDApi,
+)
 from car_feature.car_model.car_py_model.car_create_model import CarCreate
-from car_feature.car_model.car_py_model.car_py_model import Car
+from car_feature.car_model.car_py_model.car_py_model import Car, CarId
 
 
 @dataclass
 class CarConverter:
+
+    @staticmethod
+    def convert_car_id_from_api(car_id: CarIDApi) -> CarId:
+        return CarId(car_id=car_id.car_id)
 
     @staticmethod
     def convert_from_api(car: CarCreateAPI) -> CarCreate:
