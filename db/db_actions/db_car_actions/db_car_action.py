@@ -1,50 +1,83 @@
-# import asyncio
 from dataclasses import dataclass
-
-
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
-
+from sqlalchemy.exc import IntegrityError
 
 from db.db_models.db_car_model import CarORM
-
-# from db.db_settings.db_helper import db_helper
+from db.db_settings.db_helper import db_helper
 
 
 @dataclass
 class DataBaseCarAction:
 
+    # Сохранение авто в бд
     @staticmethod
-    async def save_car(
-        car: CarORM, session_factory: async_sessionmaker[AsyncSession]
-    ) -> bool:
+    async def save_car_db(car: CarORM) -> bool:
         try:
-            async with session_factory() as session:
+            async with db_helper.session_factory() as session:
 
                 session.add(car)
                 await session.commit()
 
-                print(True)
+                print(f"Авто с гос номером {car.car_id} сохранен в БД")
                 return True
 
-        except:
-            print(False)
+        except IntegrityError:
+            print(f"Автомобиль с гос номером {car.car_id} уже есть в БД")
             return False
 
+    # Поиск авто по гос номеру
     @staticmethod
-    async def search_car(
-        car_id: str, session_factory: async_sessionmaker[AsyncSession]
-    ):
+    async def search_car_db(car_id: str) -> CarORM | None:
         try:
-            async with session_factory() as session:
+            async with db_helper.session_factory() as session:
+
                 car = await session.get(CarORM, car_id)
-                print(car.car_id, car.car_brand)
-        except:
-            print("Error")
+                print(f"Автомобиль с гос номером {car.car_id} найден!")
+                return car
+
+        except AttributeError:
+            print(f"Автомобиль с гос номером {car_id} не найден")
+            return None
+
+    # Обновление гос номера авто
+    @staticmethod
+    async def update_car_id_db(car_id: str, new_car_id: str):
+        async with db_helper.session_factory() as session:
+            car = await session.get(CarORM, car_id)
+            if car:
+                car.car_id = new_car_id
+                await session.commit()
+                print(f"Гос номер {car_id} изменен на {new_car_id}")
+                return True
+            else:
+                print(f"Автомобиль с гос номером {car_id} не найден")
+                return False
+
+    # Обновление владельца авто
+    @staticmethod
+    async def update_car_owner_db(car_id: str, new_owner_id: int):
+        async with db_helper.session_factory() as session:
+            car = await session.get(CarORM, car_id)
+
+            if car.car_owner == new_owner_id:
+                print("Владелец не сменился")
+                return car.car_owner
+
+            if car:
+                car.car_owner = new_owner_id
+                await session.commit()
+                print(f"Владелец {car_id} изменен на {new_owner_id}")
+                return True
+            else:
+                print(f"Автомобиль с гос номером {car_id} не найден")
+                return False
 
 
-# #
-# async def test_search():
-#
-#     await DataBaseCarAction.search_car(
-#         car_id="O222OO77", session_factory=db_helper.session_factory
-#     )
+async def test_search():
+    await DataBaseCarAction.save_car_db(
+        car=CarORM(car_id="А113АА777", car_brand="Volvo")
+    )
+
+    await DataBaseCarAction.search_car_db(car_id="А111АА777")
+
+    await DataBaseCarAction.update_car_id_db(car_id="А151АА777", new_car_id="А111АА777")
+    await DataBaseCarAction.update_car_owner_db(car_id="А111АА777", new_owner_id=5)
