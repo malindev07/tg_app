@@ -13,7 +13,7 @@ class CarCreateAPI(BaseModel):
     car_id: str
     car_brand: str
     car_model: str
-    car_owner: str
+    car_owner: int
     car_vin: str
 
 
@@ -22,4 +22,4 @@ class CarReturnAPI:
     car_id: str
     car_brand: str
     car_model: str
-    car_owner: str
+    car_owner: int

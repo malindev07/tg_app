@@ -34,5 +34,5 @@ class CarConverter:
             car_model=car.car_brand_model.car_model,
             car_owner=car.car_owner,
         )
-        # car_api = CarReturnAPI(car_id="1", car_model="1", car_owner="1", car_brand="1")
+
         return car_api

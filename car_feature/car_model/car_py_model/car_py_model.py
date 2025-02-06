@@ -25,7 +25,7 @@ class CarVIN:
 class Car:
     car_id: CarId
     car_brand_model: CarBrandModel
-    car_owner: str
+    car_owner: int
     car_vin: Optional[CarVIN]
 
 

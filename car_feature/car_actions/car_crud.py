@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 from car_feature.car_model.car_py_model.car_create_model import CarCreate
 from car_feature.car_model.car_py_model.car_py_model import (
@@ -13,14 +13,19 @@ from car_feature.car_model.car_validator.car_validator import CarValidator
 @dataclass
 class CarAction:
     @staticmethod
-    def create_car(new_car: CarCreate) -> Car | bool:
+    async def create_car(new_car: CarCreate) -> Car | bool:
 
-        if CarValidator.validate_car_id(
-            car_id=new_car.car_id
-        ) and CarValidator.validate_car_vin(car_vin=new_car.car_vin):
+        if CarValidator.validate_car_id(car_id=new_car.car_id):
             car_id = CarId(car_id=new_car.car_id)
-            car_vin = CarVIN(car_vin=new_car.car_vin)
+            print("Car_id validate successful")
         else:
+            return False
+
+        if CarValidator.validate_car_vin(car_vin=new_car.car_vin):
+            car_vin = CarVIN(car_vin=new_car.car_vin)
+            print("Car_VIN validate successful")
+        else:
+            print("Car_VIN validate error")
             return False
 
         car_brand_model = CarBrandModel(

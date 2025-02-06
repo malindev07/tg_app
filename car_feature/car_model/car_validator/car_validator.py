@@ -6,10 +6,10 @@ import re
 class CarValidator:
 
     @staticmethod
-    def validate_car_id(car_id: str):
+    def validate_car_id(car_id: str) -> bool:
         match = re.fullmatch(r"[АВЕКМНОРСТУХ]\d{3}[АВЕКМНОРСТУХ]{2}\d{2,3}", car_id)
         return True if match else False
 
     @staticmethod
-    def validate_car_vin(car_vin: str):
+    def validate_car_vin(car_vin: str) -> bool:
         return True if len(car_vin) == 17 else False

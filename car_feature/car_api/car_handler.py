@@ -7,12 +7,12 @@ from car_feature.car_model.car_api_model.car_api_model import (
     CarIDApi,
 )
 
-car_router = APIRouter(prefix="/car", tags=["Car"])
+car_router = APIRouter(prefix="/car_orm", tags=["Car"])
 
 
 @car_router.post("/create_car")
 async def create_car(new_car: CarCreateAPI) -> CarReturnAPI | bool:
-    res = CarActionsRouter.create_car(new_car=new_car)
+    res = await CarActionsRouter.create_car(new_car=new_car)
     return res
 
 
