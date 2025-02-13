@@ -17,12 +17,11 @@ class DataBaseCarAction:
             async with db_helper.session_factory() as session:
                 session.add(car)
                 await session.commit()
-
-                print(f"Авто с гос номером {car.car_id} сохранен в БД")
+                print(car.car_id, "saved")
                 return True
 
         except IntegrityError:
-            print(f"Автомобиль с гос номером {car.car_id} уже есть в БД")
+            print(car.car_id, "not saved")
             return False
 
     # Поиск авто по гос номеру
@@ -32,11 +31,11 @@ class DataBaseCarAction:
             async with db_helper.session_factory() as session:
 
                 car = await session.get(CarORM, car_id)
-                print(f"Автомобиль с гос номером {car.car_id} найден!")
+                print(car.car_id, "found")
                 return car
 
         except AttributeError:
-            print(f"Автомобиль с гос номером {car_id} не найден")
+            print(car_id, "not found")
             return None
 
     # Обновление гос номера авто
@@ -47,10 +46,10 @@ class DataBaseCarAction:
             if car:
                 car.car_id = new_car_id
                 await session.commit()
-                print(f"Гос номер {car_id} изменен на {new_car_id}")
+                print(car_id, "updated")
                 return True
             else:
-                print(f"Автомобиль с гос номером {car_id} не найден")
+                print(car_id, "not updated")
                 return False
 
     # Обновление владельца авто
@@ -60,16 +59,16 @@ class DataBaseCarAction:
             car = await session.get(CarORM, car_id)
 
             if car.car_owner == new_owner_id:
-                print("Владелец не сменился")
+                print(car_id, "not changed")
                 return car.car_owner
 
             if car:
                 car.car_owner = new_owner_id
                 await session.commit()
-                print(f"Владелец {car_id} изменен на {new_owner_id}")
+                print(f"{car_id} owner changed {new_owner_id}")
                 return True
             else:
-                print(f"Автомобиль с гос номером {car_id} не найден")
+                print({car_id}, "not found")
                 return False
 
     @staticmethod
@@ -81,13 +80,13 @@ class DataBaseCarAction:
             return cars
 
 
-async def test_search():
-    await DataBaseCarAction.show_cars_db()
-    await DataBaseCarAction.save_car_db(
-        car=CarORM(car_id="А113АА777", car_brand="Volvo")
-    )
+# async def test_search():
+#     await DataBaseCarAction.show_cars_db()
+#     await DataBaseCarAction.save_car_db(
+#         car=CarORM(car_id="А113АА777", car_brand="Volvo")
+#     )
 
-    await DataBaseCarAction.search_car_db(car_id="А111АА777")
-
-    await DataBaseCarAction.update_car_id_db(car_id="А151АА777", new_car_id="А111АА777")
-    await DataBaseCarAction.update_car_owner_db(car_id="А111АА777", new_owner_id=5)
+# await DataBaseCarAction.search_car_db(car_id="А111АА777")
+#
+# await DataBaseCarAction.update_car_id_db(car_id="А151АА777", new_car_id="А111АА777")
+# await DataBaseCarAction.update_car_owner_db(car_id="А111АА777", new_owner_id=5)

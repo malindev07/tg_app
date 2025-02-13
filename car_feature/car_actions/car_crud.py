@@ -17,15 +17,12 @@ class CarAction:
 
         if CarValidator.validate_car_id(car_id=new_car.car_id):
             car_id = CarId(car_id=new_car.car_id)
-            print("Car_id validate successful")
         else:
             return False
 
         if CarValidator.validate_car_vin(car_vin=new_car.car_vin):
             car_vin = CarVIN(car_vin=new_car.car_vin)
-            print("Car_VIN validate successful")
         else:
-            print("Car_VIN validate error")
             return False
 
         car_brand_model = CarBrandModel(
@@ -42,9 +39,10 @@ class CarAction:
 
         return car
 
-    # @staticmethod
-    # def search_car(car_id: CarId):
-    #     return cars_storage.car_storage[car_id.car_id]
+    @staticmethod
+    async def search_car(car_id: CarId):
+        pass
+
     #
     # @staticmethod
     # def show_cars():

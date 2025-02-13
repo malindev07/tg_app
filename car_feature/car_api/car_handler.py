@@ -17,12 +17,12 @@ async def create_car(new_car: CarCreateAPI) -> CarReturnAPI | bool:
 
 
 @car_router.post("/search_car")
-async def search_car(car_id: CarIDApi):
-    res = CarActionsRouter.search_car(car_id=car_id)
+async def search_car(car_id: CarIDApi) -> CarReturnAPI | None:
+    res = await CarActionsRouter.search_car(car_id=car_id)
     return res
 
 
 @car_router.get("/show_Cars")
-async def show_cars():
-    res = CarActionsRouter.show_cars()
+async def show_cars() -> dict[str, CarReturnAPI]:
+    res = await CarActionsRouter.show_cars()
     return res

@@ -3,12 +3,10 @@ from dataclasses import dataclass
 from pydantic import BaseModel
 
 
-@dataclass
 class CarIDApi(BaseModel):
     car_id: str
 
 
-@dataclass
 class CarCreateAPI(BaseModel):
     car_id: str
     car_brand: str
@@ -17,9 +15,8 @@ class CarCreateAPI(BaseModel):
     car_vin: str
 
 
-@dataclass
-class CarReturnAPI:
-    car_id: str
-    car_brand: str
-    car_model: str
-    car_owner: int
+class CarReturnAPI(BaseModel):
+    car_id: str | None
+    car_brand: str | None
+    car_model: str | None
+    car_owner: int | None
