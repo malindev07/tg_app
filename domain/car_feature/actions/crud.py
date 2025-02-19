@@ -39,5 +39,3 @@ class CarAction:
         )
 
         return car
-
-
