@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from car_feature.car_model.car_py_model.car_py_model import (
+from domain.car_feature.model.base_model.model import (
     Car,
     CarId,
     CarBrandModel,
     CarVIN,
 )
-from db.db_models.db_car_model import CarORM
+from repository.db.models.car_model import CarORM
 
 
 @dataclass

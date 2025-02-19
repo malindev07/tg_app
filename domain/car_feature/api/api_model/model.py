@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+
 
 from pydantic import BaseModel
 
@@ -20,3 +20,4 @@ class CarReturnAPI(BaseModel):
     car_brand: str | None
     car_model: str | None
     car_owner: int | None
+    car_vin: str | None

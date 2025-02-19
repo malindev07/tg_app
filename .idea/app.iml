@@ -10,7 +10,7 @@
   <component name="PyNamespacePackagesService">
     <option name="namespacePackageFolders">
       <list>
-        <option value="$MODULE_DIR$/car_feature" />
+        <option value="$MODULE_DIR$/domain/car_feature" />
       </list>
     </option>
   </component>

@@ -1,11 +1,9 @@
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     async_sessionmaker,
-    AsyncEngine,
-    AsyncSession,
 )
 
-from db.db_settings.db_settings import Settings
+from repository.db.settings.settings import Settings
 
 
 class DataBaseHelper:
@@ -32,6 +30,7 @@ class DataBaseHelper:
 
 
 db_helper = DataBaseHelper(db_url=Settings().database_url)
+
 
 # @property
 # def db_engine(self) -> AsyncEngine:
