@@ -5,6 +5,7 @@ from domain.car_feature.api.api_model.model import (
     CarCreateAPI,
     CarReturnAPI,
     CarIDApi,
+    CarNewIdOwnerAPI,
 )
 
 car_router = APIRouter(prefix="/car_orm", tags=["Car"])
@@ -27,4 +28,16 @@ async def search_car(req: Request, car_id: CarIDApi) -> CarReturnAPI | None:
 @car_router.get("/show_Cars")
 async def show_cars(req: Request) -> dict[str, CarReturnAPI]:
     res = await req.state.car_action_router.show_cars()
+    return res
+
+
+@car_router.patch("/update_owner")
+async def update_id_and_owner(
+    req: Request, car_id: CarIDApi, new_id_owner: CarNewIdOwnerAPI
+):
+
+    res = await req.state.car_action_router.update_id_and_owner(
+        car_id=car_id, new_id_owner=new_id_owner
+    )
+
     return res

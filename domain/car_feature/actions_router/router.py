@@ -6,6 +6,7 @@ from domain.car_feature.api.api_model.model import (
     CarCreateAPI,
     CarReturnAPI,
     CarIDApi,
+    CarNewIdOwnerAPI,
 )
 from repository.db.actions.car_actions.car_action import DataBaseCarAction
 from services.car.api_converter.api_converter import CarConverter
@@ -60,3 +61,19 @@ class CarActionsRouter:
             all_cars[car_re.car_id] = car_re
 
         return all_cars
+
+    async def update_id_and_owner(
+        self, car_id: CarIDApi, new_id_owner: CarNewIdOwnerAPI
+    ):
+
+        res = await self.car_db_action.update_id_and_owner(
+            car_id=car_id.car_id,
+            new_car_id=new_id_owner.id,
+            new_owner_id=new_id_owner.owner,
+        )
+        if res:
+            car = CarDBConverter.convert_db_to_py(res)
+            car_re = CarConverter.convert_from_py_to_api(car)
+            return car_re
+
+        return res

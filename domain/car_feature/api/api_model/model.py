@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class CarIDApi(BaseModel):
@@ -11,6 +13,11 @@ class CarCreateAPI(BaseModel):
     car_model: str
     car_owner: int
     car_vin: str
+
+
+class CarNewIdOwnerAPI(BaseModel):
+    id: str | None = None
+    owner: int | None = None
 
 
 class CarReturnAPI(BaseModel):

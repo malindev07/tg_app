@@ -10,13 +10,13 @@ class CarId:
     car_id: str
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, frozen=True)
 class CarBrandModel:
     car_brand: str
     car_model: str
 
 
-@dataclass(slots=True)
+@dataclass(slots=True, frozen=True)
 class CarVIN:
     car_vin: str
 
