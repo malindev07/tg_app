@@ -8,12 +8,9 @@ from repository.db.models.car_model import CarORM
 from repository.db.settings.helper import db_helper
 
 
-# from repository.db.settings.helper import db_helper
-
-
 @dataclass
 class DataBaseCarAction:
-    db_session: async_sessionmaker[AsyncSession] = db_helper.session_factory()
+    db_session: async_sessionmaker[AsyncSession]
 
     # Сохранение авто в бд
     async def save_car_db(self, car: CarORM) -> CarORM | None:

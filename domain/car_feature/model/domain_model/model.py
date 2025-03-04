@@ -24,9 +24,10 @@ class CarVIN:
 @dataclass(slots=True)
 class Car:
     car_id: CarId
-    car_brand_model: CarBrandModel
+    car_brand: str
+    car_model: str
     car_owner: int
-    car_vin: Optional[CarVIN]
+    car_vin: CarVIN
 
 
 # vin = Vin("WBAWX710500B98068")

@@ -29,7 +29,7 @@ class DataBaseHelper:
     #         await conn.run_sync(base.metadata.create_all)
 
 
-db_helper = DataBaseHelper(db_url=Settings().database_url)
+# db_helper = DataBaseHelper(db_url=Settings().database_url)
 
 
 # @property
