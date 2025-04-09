@@ -1,15 +1,13 @@
-from dataclasses import asdict
 from uuid import UUID
 
-from fastapi import APIRouter, Request, Response, Depends
+from fastapi import APIRouter, Request, Depends
 
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.cars.schemas.schema import CarCreateSchema, CarIDSchema
-from apps.services.car_services.services import CarServices
+from api.cars.schemas.schema import CarCreateSchema
 from core.db.helper import db_helper
-from repository.car_repository.repository import CarRepository, get_car_repo
+from services.car_services.services import CarServices
 
 car_router = APIRouter(prefix="/car", tags=["Car"])
 
@@ -18,18 +16,13 @@ car_router = APIRouter(prefix="/car", tags=["Car"])
 async def create(
     request: Request,
     data: CarCreateSchema,
-    session: AsyncSession = Depends(db_helper.session),
-    car_repo: CarRepository = Depends(get_car_repo),
-    car_service: CarServices = Depends(get_car_service),
 ):
-
-    return await car_repo.create(session, data)
+    return await request.state.car_services.create(data)
 
 
 @car_router.get("/{id_}")
 async def get(
+    request: Request,
     id_: UUID,
-    session: AsyncSession = Depends(db_helper.session),
-    car_repo: CarRepository = Depends(get_car_repo),
 ):
-    return await car_repo.get(session, id_)
+    return await request.state.car_services.get(id_)
