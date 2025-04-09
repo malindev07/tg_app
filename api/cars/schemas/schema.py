@@ -20,14 +20,23 @@ class CarNewIdOwnerAPI(BaseModel):
     owner: int | None = None
 
 
+class CarValidationInfoSchema(BaseModel):
+    data: list = Field(default_factory=list)
+
+
+class CarAlreadyExistsSchema(BaseModel):
+    data: str
+    msg: str = Field(default="Already exists")
+
+
 class CarSchema(BaseModel):
-    id: UUID
+    id: Optional[UUID]
     gos_nomer: str
     brand: str
     model: str
     vin: Optional[str] = Field(default=None)
-    # Новый способ конфигурации в Pydantic v2
+
     model_config = ConfigDict(
-        from_attributes=True,  # Замена orm_mode=True
-        populate_by_name=True,  # Если нужно alias-преобразование
+        from_attributes=True,
+        populate_by_name=True,
     )

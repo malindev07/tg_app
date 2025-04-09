@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="enabledOnReformat" value="true" />
     <option name="enabledOnSave" value="true" />
-    <option name="sdkName" value="Python 3.12 (STO_app)" />
+    <option name="sdkName" value="Python 3.12 virtualenv at C:\PythonTrainDir\crm_product\tg_app\app\.venv" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (STO_app)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 virtualenv at C:\PythonTrainDir\crm_product\tg_app\app\.venv" project-jdk-type="Python SDK" />
 </project>

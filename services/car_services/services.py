@@ -1,38 +1,49 @@
-from contextlib import asynccontextmanager
-from dataclasses import dataclass
-from typing import AsyncGenerator, AsyncIterator
 from uuid import UUID
-
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.util import await_only
-
-from api.cars.schemas.schema import CarCreateSchema, CarSchema
-from core.db.helper import db_helper
-from services.base_service import BaseService
-from core.db.generics import SchemaType
+from dataclasses import dataclass
 from core.db.models import CarModel
+from sqlalchemy.ext.asyncio import AsyncSession
 from repository.car_repository.repository import CarRepository
+from services.base_service import MainServices
+from api.cars.schemas.schema import (
+    CarCreateSchema,
+    CarSchema,
+    CarAlreadyExistsSchema,
+    CarValidationInfoSchema,
+)
+from services.car_services.validator.car_validator import CarValidator
 
 
 @dataclass
-class CarServices(BaseService):
+class CarServices(MainServices[CarModel, CarSchema]):
     MODEL = CarModel
     SCHEMA = CarSchema
     repository: CarRepository
+    validator: CarValidator
 
-    async def create(self, schema: CarCreateSchema) -> SchemaType:
-        model = await super()._to_model(schema)  # из pydantic схемы в модель
-        obj = await self.repository.create(model=model)
-        return await super()._to_schema(obj)  # из модели в схему pydantic
+    async def create(
+        self, schema: CarCreateSchema, session: AsyncSession
+    ) -> SCHEMA | CarAlreadyExistsSchema | CarValidationInfoSchema:
 
-    async def get(self, id_: UUID) -> SchemaType:
-        return self._to_schema(await self.repository.get(id_=id_))
+        validation_res: CarValidationInfoSchema = self.validator.is_validate(
+            vin=schema.vin,
+            gos_nomer=schema.gos_nomer,
+        )
 
-    def _to_schema(self, obj: MODEL) -> SCHEMA:
-        """Конвертирует модель в схему"""
-        return self.SCHEMA.model_validate(obj, from_attributes=True)
+        if validation_res.data:
+            return validation_res
 
-    def _to_model(self, data: SCHEMA) -> MODEL:
-        """Конвертирует схему в модель"""
-        return self.MODEL(**data.model_dump())
+        obj = await super().get_by_field(
+            key="gos_nomer", value=schema.gos_nomer, session=session
+        )
+        if obj:
+            return CarAlreadyExistsSchema(data=schema.gos_nomer)
+
+        return await super().create(schema=schema, session=session)
+
+    async def get(self, id_: UUID, session: AsyncSession) -> SCHEMA | None:
+        return await super()._to_schema(
+            await super().get(id_=id_, session=session),
+        )
+
+    async def delete(self, id_: UUID, session: AsyncSession) -> dict[UUID, str] | None:
+        return await super().delete(id_, session)
