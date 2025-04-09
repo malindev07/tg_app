@@ -1,7 +1,4 @@
 from uuid import UUID
-
-from watchfiles import awatch
-
 from core.db.helper import db_helper
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Request, Depends
