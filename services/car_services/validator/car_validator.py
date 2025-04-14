@@ -35,5 +35,3 @@ class CarValidator:
             incorrect_values.data.append(validate_gos_nomer)
 
         return incorrect_values
-
-        # return self._validate_vin(vin) and self._validate_gos_nomer(gos_nomer)

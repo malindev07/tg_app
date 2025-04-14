@@ -1,11 +1,6 @@
-import asyncio
-from contextlib import asynccontextmanager
-from typing import Optional, AsyncGenerator, AsyncIterator
-
+from sqlalchemy import text
+from typing import AsyncGenerator
 from core.db.models.base import Base
-
-
-from sqlalchemy import MetaData, text
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from core.db.settings.settings import Settings

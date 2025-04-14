@@ -18,21 +18,16 @@ class BaseServices(ABC, Generic[ModelType, SchemaType]):
     repository: RepositoryBase
 
     @abstractmethod
-    async def create(self, model: SchemaType, session: AsyncSession) -> SchemaType: ...
+    async def create(self, model: SchemaType) -> SchemaType: ...
 
     @abstractmethod
-    async def get(self, id_: UUID, session: AsyncSession) -> MODEL | None: ...
+    async def get(self, id_: UUID) -> ModelType | None: ...
 
     @abstractmethod
-    async def delete(
-        self, id_: UUID, session: AsyncSession
-    ) -> dict[UUID, str] | None: ...
+    async def delete(self, id_: UUID) -> ModelType | None: ...
 
     @abstractmethod
-    def _to_schema(self, obj: ModelType) -> SchemaType: ...
-
-    @abstractmethod
-    def _to_model(self, data: SchemaType) -> ModelType: ...
+    async def get_by_field(self, key: str, value: str) -> ModelType | None: ...
 
 
 @dataclass
@@ -42,32 +37,17 @@ class MainServices(BaseServices, Generic[ModelType, SchemaType]):
     SCHEMA = SchemaType
     repository: RepositoryORM
 
-    async def create(self, schema: SCHEMA, session: AsyncSession) -> SCHEMA:
-        model = await self._to_model(schema)  # из pydantic схемы в модель
-        obj = await self.repository.create(model=model, session=session)
-        return await self._to_schema(obj)  # из модели в схему pydantic
+    async def create(self, model: MODEL) -> MODEL:
+        obj = await self.repository.create(model=model)
+        return obj
 
-    async def get(self, id_: UUID, session: AsyncSession) -> MODEL | None:
-        return await self.repository.get(id_=id_, session=session)
+    async def get(self, id_: UUID) -> MODEL | None:
+        return await self.repository.get(id_=id_)
 
-    async def delete(self, id_: UUID, session: AsyncSession) -> dict[UUID, str] | None:
-        # obj = await self.get(id_=id_, session=session) TODO уточнить!
-        obj = await self.repository.get(id_=id_, session=session)
-        if obj:
-            await self.repository.delete(session=session, model=obj)
-            return {id_: "deleted"}  # Уточнить как правильно сделать
+    async def get_by_field(self, key: str, value: str) -> MODEL | None:
+        return await self.repository.get_by_field(key=key, value=value)
 
-        return None
-
-    async def get_by_field(
-        self, key: str, value: str, session: AsyncSession
-    ) -> MODEL | None:
-        return await self.repository.get_by_field(key=key, value=value, session=session)
-
-    async def _to_schema(self, obj: MODEL) -> SCHEMA:
-        """Конвертирует модель в схему"""
-        return self.SCHEMA.model_validate(obj, from_attributes=True)
-
-    async def _to_model(self, schema: SCHEMA) -> MODEL:
-        """Конвертирует схему в модель"""
-        return self.MODEL(**schema.model_dump())
+    async def delete(self, id_: UUID) -> MODEL | None:
+        obj = await self.repository.get(id_=id_)
+        await self.repository.delete(model=obj)
+        return obj

@@ -20,6 +20,11 @@ class CarNewIdOwnerAPI(BaseModel):
     owner: int | None = None
 
 
+class CarGetByFieldSchema(BaseModel):
+    key: str
+    value: str
+
+
 class CarValidationInfoSchema(BaseModel):
     data: list = Field(default_factory=list)
 
@@ -40,3 +45,8 @@ class CarSchema(BaseModel):
         from_attributes=True,
         populate_by_name=True,
     )
+
+
+class CarDeletedSchema(BaseModel):
+    data: CarSchema
+    msg: str = Field(default="deleted")

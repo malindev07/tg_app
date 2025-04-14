@@ -1,15 +1,16 @@
 from uuid import UUID
 from dataclasses import dataclass
 from core.db.models import CarModel
-from sqlalchemy.ext.asyncio import AsyncSession
-from repository.car_repository.repository import CarRepository
-from services.base_service import MainServices
 from api.cars.schemas.schema import (
     CarCreateSchema,
     CarSchema,
     CarAlreadyExistsSchema,
     CarValidationInfoSchema,
+    CarDeletedSchema,
 )
+from services.base_service import MainServices
+from repository.car_repository.repository import CarRepository
+from services.car_services.converter.car_converter import CarConverter
 from services.car_services.validator.car_validator import CarValidator
 
 
@@ -19,9 +20,10 @@ class CarServices(MainServices[CarModel, CarSchema]):
     SCHEMA = CarSchema
     repository: CarRepository
     validator: CarValidator
+    converter: CarConverter
 
     async def create(
-        self, schema: CarCreateSchema, session: AsyncSession
+        self, schema: CarCreateSchema
     ) -> SCHEMA | CarAlreadyExistsSchema | CarValidationInfoSchema:
 
         validation_res: CarValidationInfoSchema = self.validator.is_validate(
@@ -32,18 +34,29 @@ class CarServices(MainServices[CarModel, CarSchema]):
         if validation_res.data:
             return validation_res
 
-        obj = await super().get_by_field(
-            key="gos_nomer", value=schema.gos_nomer, session=session
-        )
+        obj = await super().get_by_field(key="gos_nomer", value=schema.gos_nomer)
         if obj:
             return CarAlreadyExistsSchema(data=schema.gos_nomer)
 
-        return await super().create(schema=schema, session=session)
+        model_create = await self.converter.schema_to_model(schema=schema)
+        model = await super().create(model=model_create)
+        return await self.converter.model_to_schema(model=model)
 
-    async def get(self, id_: UUID, session: AsyncSession) -> SCHEMA | None:
-        return await super()._to_schema(
-            await super().get(id_=id_, session=session),
+    async def get(self, id_: UUID) -> SCHEMA | None:
+        return await self.converter.model_to_schema(
+            await super().get(id_=id_),
         )
 
-    async def delete(self, id_: UUID, session: AsyncSession) -> dict[UUID, str] | None:
-        return await super().delete(id_, session)
+    async def delete(self, id_: UUID) -> CarDeletedSchema | None:
+        obj = await super().delete(id_)
+        if obj:
+            return CarDeletedSchema(
+                data=await self.converter.model_to_schema(obj), msg="Object deleted"
+            )
+        return None
+
+    async def get_by_field(self, key: str, value: str) -> SCHEMA | None:
+        obj = await super().get_by_field(key, value)
+        if obj:
+            return await self.converter.model_to_schema(obj)
+        return None

@@ -3,63 +3,65 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from core.db.generics import ModelType
+from core.db.helper import db_helper
 
 
 @dataclass
 class RepositoryBase(ABC):
     MODEL = ModelType
+    session_factory: async_sessionmaker[AsyncSession] = db_helper.session_factory
 
     @abstractmethod
-    async def create(self, session: AsyncSession, model: type[MODEL]) -> MODEL: ...
+    async def create(self, model: MODEL) -> MODEL: ...
 
     @abstractmethod
-    async def get(self, session: AsyncSession, id_: UUID) -> MODEL: ...
+    async def get(self, id_: UUID) -> MODEL: ...
 
     @abstractmethod
-    async def delete(self, session: AsyncSession, id_: UUID) -> MODEL: ...
+    async def get_by_field(self, key: str, value: str) -> MODEL | None: ...
 
     @abstractmethod
-    async def get_by_field(
-        self,
-        key: str,
-        value: str,
-        session: AsyncSession,
-    ) -> MODEL | None: ...
+    async def delete(self, id_: UUID) -> MODEL: ...
+
+    @abstractmethod
+    async def update(self) -> MODEL: ...
 
 
 @dataclass
 class RepositoryORM(RepositoryBase):
     MODEL = ModelType
+    session_factory = db_helper.session_factory
 
-    async def create(self, session: AsyncSession, model: type[MODEL]) -> MODEL:
+    async def create(self, model: MODEL) -> MODEL:
         try:
-            session.add(model)
-            await session.commit()
+            async with self.session_factory() as session:
+                session.add(model)
+                await session.commit()
         except Exception as e:
             await session.rollback()
             raise e
         return model
 
-    async def get(self, session: AsyncSession, id_: UUID) -> MODEL | None:
-        query = select(self.MODEL).where(self.MODEL.id == id_)
-        res = await session.execute(query)
-        obj = res.scalar_one_or_none()
-        return obj
+    async def get(self, id_: UUID) -> MODEL | None:
+        async with self.session_factory() as session:
+            query = select(self.MODEL).where(self.MODEL.id == id_)
+            res = await session.execute(query)
+            obj = res.scalar_one_or_none()
+            return obj
 
-    async def delete(self, session: AsyncSession, model: MODEL) -> None:
-        await session.delete(model)
-        await session.commit()
+    async def get_by_field(self, key: str, value: str) -> MODEL | None:
+        async with self.session_factory() as session:
+            query = select(self.MODEL).where(getattr(self.MODEL, key) == value)
+            result = await session.execute(query)
+            obj = result.scalar_one_or_none()
+            return obj
 
-    async def get_by_field(
-        self,
-        key: str,
-        value: str,
-        session: AsyncSession,
-    ) -> MODEL | None:
-        query = select(self.MODEL).where(getattr(self.MODEL, key) == value)
-        result = await session.execute(query)
-        obj = result.scalar_one_or_none()
-        return obj
+    async def delete(self, model: MODEL) -> None:
+        async with self.session_factory() as session:
+            await session.delete(model)
+            await session.commit()
+
+    async def update(self) -> MODEL: ...
