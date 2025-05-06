@@ -1,3 +1,5 @@
+import asyncio
+
 from sqlalchemy import text
 from typing import AsyncGenerator
 from core.db.models.base import Base
@@ -54,3 +56,5 @@ class DatabaseHelper:
 
 url = Settings().database_url
 db_helper = DatabaseHelper(db_url=url)
+
+asyncio.run(db_helper.recreate_all())

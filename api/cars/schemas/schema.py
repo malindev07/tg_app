@@ -34,6 +34,11 @@ class CarAlreadyExistsSchema(BaseModel):
     msg: str = Field(default="Already exists")
 
 
+class CarPatchSchema(BaseModel):
+    id: UUID
+    data: dict = Field(default_factory=dict)
+
+
 class CarSchema(BaseModel):
     id: Optional[UUID]
     gos_nomer: str

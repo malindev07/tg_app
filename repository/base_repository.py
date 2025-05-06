@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Any
 from uuid import UUID
+
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -64,4 +66,14 @@ class RepositoryORM(RepositoryBase):
             await session.delete(model)
             await session.commit()
 
-    async def update(self) -> MODEL: ...
+    async def patch(self, id_: UUID, data: dict[str, Any]) -> MODEL:
+        async with self.session_factory() as session:
+            query = select(self.MODEL).where(self.MODEL.id == id_)
+            res = await session.execute(query)
+            model = res.scalar_one_or_none()
+            for field, value in data.items():
+                if hasattr(model, field):
+                    setattr(model, field, value)
+            await session.commit()
+            await session.refresh(model)
+            return model

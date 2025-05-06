@@ -1,5 +1,8 @@
 from uuid import UUID
 from dataclasses import dataclass
+
+from watchfiles import awatch
+
 from core.db.models import CarModel
 from api.cars.schemas.schema import (
     CarCreateSchema,
@@ -7,6 +10,7 @@ from api.cars.schemas.schema import (
     CarAlreadyExistsSchema,
     CarValidationInfoSchema,
     CarDeletedSchema,
+    CarPatchSchema,
 )
 from services.base_service import MainServices
 from repository.car_repository.repository import CarRepository
@@ -60,3 +64,10 @@ class CarServices(MainServices[CarModel, CarSchema]):
         if obj:
             return await self.converter.model_to_schema(obj)
         return None
+
+    async def partial_update(self, data: CarPatchSchema) -> SCHEMA | None:
+        model = await super().get(data.id)
+        if model:
+            upd_model = await super().patch(id_=data.id, data=data.data)
+            return await self.converter.model_to_schema(upd_model)
+        return model

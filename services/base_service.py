@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Generic, Type
+from typing import Generic, Any
 from uuid import UUID
 
-
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.db.generics import ModelType, SchemaType
 from repository.base_repository import RepositoryBase, RepositoryORM
@@ -51,3 +49,6 @@ class MainServices(BaseServices, Generic[ModelType, SchemaType]):
         obj = await self.repository.get(id_=id_)
         await self.repository.delete(model=obj)
         return obj
+
+    async def patch(self, id_: UUID, data: dict[str, Any]) -> MODEL:
+        return await self.repository.patch(id_=id_, data=data)
