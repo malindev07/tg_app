@@ -3,7 +3,7 @@ from requests import Request
 
 from api.customers.schemas.customer import CreateCustomerSchema
 
-customer_router = APIRouter(prefix = "/customer", tags = ["Customer"])
+customer_router = APIRouter(prefix="/customer", tags=["Customer"])
 
 
 @customer_router.post("/")
