@@ -12,7 +12,7 @@ class CustomerModel(Base):
     __tablename__ = "customers"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    first_name: Mapped[str] = mapped_column(nullable=False, unique=True)
+    first_name: Mapped[str] = mapped_column(nullable = False)
     last_name: Mapped[str] = mapped_column(nullable=False)
     middle_name: Mapped[str] = mapped_column(nullable=True)
     phone: Mapped[str] = mapped_column(nullable=False, unique=True)

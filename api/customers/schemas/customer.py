@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -6,7 +7,7 @@ from pydantic import BaseModel, Field
 class CreateCustomerSchema(BaseModel):
     first_name: str
     last_name: str
-    middle_name: str = Field(default = str)
+    middle_name: Optional[str] = Field(default = None)
     phone: str
 
 
