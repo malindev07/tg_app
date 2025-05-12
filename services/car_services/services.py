@@ -1,7 +1,6 @@
 from uuid import UUID
 from dataclasses import dataclass
 
-from watchfiles import awatch
 
 from core.db.models import CarModel
 from api.cars.schemas.schema import (

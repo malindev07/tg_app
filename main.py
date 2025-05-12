@@ -1,6 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 from dataclasses import dataclass
+
+from api.customers.handlers.customer_handler import customer_router
 from api.health_check import health_router
 from contextlib import asynccontextmanager
 from api.cars.handlers.car_handler import car_router
@@ -26,6 +28,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 app.include_router(car_router)
+app.include_router(customer_router)
 app.include_router(health_router)
 
 

@@ -57,4 +57,4 @@ class DatabaseHelper:
 url = Settings().database_url
 db_helper = DatabaseHelper(db_url=url)
 
-asyncio.run(db_helper.recreate_all())
+# asyncio.run(db_helper.recreate_all())
