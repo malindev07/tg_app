@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
 import re
+from dataclasses import dataclass
 
 from api.cars.schemas.schema import CarValidationInfoSchema
 
@@ -13,7 +13,6 @@ class CarValidator:
         if match:
             return {}
         else:
-
             return {gos_nomer: "Incorrect value"}
 
     @staticmethod

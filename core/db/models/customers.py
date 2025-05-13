@@ -12,11 +12,11 @@ class CustomerModel(Base):
     __tablename__ = "customers"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    first_name: Mapped[str] = mapped_column(nullable = False)
+    first_name: Mapped[str] = mapped_column(nullable=False)
     last_name: Mapped[str] = mapped_column(nullable=False)
     middle_name: Mapped[str] = mapped_column(nullable=True)
     phone: Mapped[str] = mapped_column(nullable=False, unique=True)
-    is_verify: Mapped[bool] = mapped_column(nullable=True)
+    is_verify: Mapped[bool] = mapped_column(default=False)
     tg_id: Mapped[str] = mapped_column(nullable=True)
     discount: Mapped[int] = mapped_column(default=0)
     created_at: Mapped[datetime] = mapped_column(
