@@ -28,7 +28,7 @@ class CustomerRepository(RepositoryORM):
         return await super().delete(model)
 
     async def update(self) -> MODEL: ...
-    
+
     async def get_cars(self, id_: UUID) -> Sequence["CarModel"]:
         async with self.session_factory() as session:
             query = (

@@ -25,5 +25,5 @@ class CustomerModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
-    
-    cars: Mapped[list["CarModel"]] = relationship("CarModel", back_populates = "owner")
+
+    cars: Mapped[list["CarModel"]] = relationship("CarModel", back_populates="owner")
