@@ -15,10 +15,10 @@ class CarModel(Base):
     brand: Mapped[str] = mapped_column(nullable=False)
     model: Mapped[str] = mapped_column(nullable=False)
     vin: Mapped[str] = mapped_column(nullable=True)
-    odometer_registered: Mapped[int] = mapped_column(nullable = False)
-    odometer_last: Mapped[int] = mapped_column(nullable = True)
-    
-    owner_id: Mapped[UUID] = mapped_column(ForeignKey("customers.id"), nullable = True)
+    odometer_registered: Mapped[int] = mapped_column(nullable=False)
+    odometer_last: Mapped[int] = mapped_column(nullable=True)
+
+    owner_id: Mapped[UUID] = mapped_column(ForeignKey("customers.id"), nullable=True)
     owner: Mapped["CustomerModel"] = relationship(
-        "CustomerModel", back_populates = "cars"
+        "CustomerModel", back_populates="cars"
     )
