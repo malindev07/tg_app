@@ -8,6 +8,7 @@ from api.customers.schemas.customer import (
     CustomerPatchSchema,
     CustomerValidateErrorPhoneSchema,
     CustomerAlreadyExistsSchema,
+    CustomerCarsSchema,
 )
 from core.db.models.customers import CustomerModel
 from repository.customers_repository.repository import CustomerRepository
@@ -64,3 +65,15 @@ class CustomerServices(MainServices[CustomerModel, CustomerSchema]):
             upd_model = await super().patch(id_=data.id, data=data.data)
             return await self.converter.model_to_schema(upd_model)
         return model
+    
+    async def get_cars(self, id_: UUID) -> CustomerCarsSchema | None:
+        obj = await super().get(id_ = id_)
+        if obj is not None:
+            cars = await self.repository.get_cars(id_)
+            customer_cars = CustomerCarsSchema()
+            for car in cars:
+                customer_cars.cars.append(
+                    await self.converter.car_model_to_customer_schema(model = car)
+                )
+            return customer_cars
+        return obj

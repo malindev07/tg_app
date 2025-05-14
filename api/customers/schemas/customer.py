@@ -3,6 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
+from api.cars.schemas.schema import CarSchema
+
 
 class CustomerCreateSchema(BaseModel):
     first_name: str
@@ -24,6 +26,10 @@ class CustomerValidateErrorPhoneSchema(BaseModel):
 class CustomerAlreadyExistsSchema(BaseModel):
     data: str
     msg: str
+
+
+class CustomerCarsSchema(BaseModel):
+    cars: list[CarSchema] = Field(default_factory=list)
 
 
 class CustomerSchema(BaseModel):

@@ -12,6 +12,9 @@ class CarConverter:
             brand=schema.gos_nomer,
             model=schema.model,
             vin=schema.vin,
+            odometer_registered = schema.odometer_registered,
+            odometer_last = schema.odometer_last,
+            owner_id = schema.owner_id,
         )
 
     async def model_to_schema(self, model: CarModel) -> CarSchema:
@@ -21,4 +24,6 @@ class CarConverter:
             brand=model.gos_nomer,
             model=model.model,
             vin=model.vin,
+            odometer_registered = model.odometer_registered,
+            odometer_last = model.odometer_last,
         )

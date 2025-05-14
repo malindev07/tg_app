@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.db.models.base import Base
 
@@ -25,3 +25,5 @@ class CustomerModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
+    
+    cars: Mapped[list["CarModel"]] = relationship("CarModel", back_populates = "owner")

@@ -1,5 +1,9 @@
 from dataclasses import dataclass
+from typing import Sequence
 from uuid import UUID
+
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from core.db.helper import db_helper
 from core.db.models import CustomerModel
@@ -24,3 +28,15 @@ class CustomerRepository(RepositoryORM):
         return await super().delete(model)
 
     async def update(self) -> MODEL: ...
+    
+    async def get_cars(self, id_: UUID) -> Sequence["CarModel"]:
+        async with self.session_factory() as session:
+            query = (
+                select(CustomerModel)
+                .options(selectinload(CustomerModel.cars))
+                .where(CustomerModel.id == id_)
+            )
+            res = await session.execute(query)
+            customer = res.scalar_one_or_none()
+            cars = customer.cars
+            return cars
