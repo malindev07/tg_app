@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
 import re
+from dataclasses import dataclass
 
 from api.cars.schemas.schema import CarValidationInfoSchema
 

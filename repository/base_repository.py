@@ -28,9 +28,6 @@ class RepositoryBase(ABC):
     @abstractmethod
     async def delete(self, id_: UUID) -> MODEL: ...
 
-    @abstractmethod
-    async def update(self) -> MODEL: ...
-
 
 @dataclass
 class RepositoryORM(RepositoryBase):
