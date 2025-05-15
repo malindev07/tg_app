@@ -2,12 +2,13 @@ from fastapi import APIRouter, Request
 
 from api.records.schema.records import RecordCreateSchema
 
-record_router = APIRouter(prefix = "/record", tags = ["Record"])
+record_router = APIRouter(prefix="/record", tags=["Record"])
 
 
 @record_router.post("/")
 async def create(request: Request, data: RecordCreateSchema):
-    return await request.state.records_services.create(schema = data)
+    return await request.state.records_services.create(schema=data)
+
 
 #
 # @record_router.get("/")
