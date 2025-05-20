@@ -18,7 +18,7 @@ class RecordConverter:
             start_time = schema.start_time,
             end_time = schema.end_time,
         )
-    
+
     async def model_to_schema(self, model: RecordModel) -> RecordSchema:
         return RecordSchema(
             client_id = model.client_id,
