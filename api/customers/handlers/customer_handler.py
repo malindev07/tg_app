@@ -43,5 +43,5 @@ async def patch(request: Request, data: CustomerPatchSchema) -> CustomerSchema |
 
 
 @customer_router.get("/{id_}/cars")
-async def get_by_field(request: Request, id_: UUID) -> CustomerCarsSchema | None:
+async def get_cars(request: Request, id_: UUID) -> CustomerCarsSchema | None:
     return await request.state.customer_services.get_cars(id_)
