@@ -38,7 +38,7 @@ class StaffModel(Base):
     salary_rate: Mapped[int] = mapped_column(nullable = False)
     
     comment: Mapped[str] = mapped_column(default = "", nullable = True)
-    
+
     created_at: Mapped[datetime] = mapped_column(
         server_default = func.now(), nullable = False
     )
