@@ -19,14 +19,15 @@ class RecordConverter:
             end_time = schema.end_time,
         )
     
-    # async def model_to_schema(self, model: CustomerModel) -> CustomerSchema:
-    #     return CustomerSchema(
-    #         id=model.id,
-    #         first_name=model.first_name,
-    #         last_name=model.last_name,
-    #         middle_name=model.middle_name,
-    #         phone=model.phone,
-    #         is_verify=model.is_verify,
-    #         tg_id=model.tg_id,
-    #         discount=model.discount,
-    #     )
+    async def model_to_schema(self, model: RecordModel) -> RecordSchema:
+        return RecordSchema(
+            client_id = model.client_id,
+            car_id = model.car_id,
+            reason = model.reason,
+            comment = model.comment,
+            record_date = model.record_date,
+            start_time = model.start_time,
+            end_time = model.end_time,
+            id = model.id,
+            status = model.status,
+        )

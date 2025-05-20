@@ -1,7 +1,7 @@
-from datetime import datetime, time, date
+from datetime import time, date
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from core.db.models import RecordStatus
 
@@ -16,6 +16,11 @@ class RecordCreateSchema(BaseModel):
     end_time: time
 
 
+class RecordPatchSchema(BaseModel):
+    id: UUID
+    data: dict = Field(default_factory = dict)
+
+
 class RecordSchema(BaseModel):
     id: UUID
     client_id: UUID
@@ -26,5 +31,10 @@ class RecordSchema(BaseModel):
     record_date: date
     start_time: time
     end_time: time
-    created_at: datetime
-    updated_at: datetime
+    # created_at: datetime
+    # updated_at: datetime
+
+
+class RecordDeleteSchema(BaseModel):
+    data: RecordSchema
+    msg: str = Field(default = "deleted")

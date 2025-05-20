@@ -1,5 +1,9 @@
 from dataclasses import dataclass
+from datetime import date
+from typing import Sequence
 from uuid import UUID
+
+from sqlalchemy import select
 
 from core.db.helper import db_helper
 from core.db.models.records import RecordModel
@@ -25,14 +29,9 @@ class RecordsRepository(RepositoryORM):
 
     async def update(self) -> MODEL: ...
 
-    # async def get_cars(self, id_: UUID) -> Sequence["CarModel"]:
-    #     async with self.session_factory() as session:
-    #         query = (
-    #             select(CustomerModel)
-    #             .options(selectinload(CustomerModel.cars))
-    #             .where(CustomerModel.id == id_)
-    #         )
-    #         res = await session.execute(query)
-    #         customer = res.scalar_one_or_none()
-    #         cars = customer.cars
-    #         return cars
+    async def get_by_date(self, record_date: date) -> Sequence[RecordModel]:
+        async with self.session_factory() as session:
+            query = select(self.MODEL).where(self.MODEL.record_date == record_date)
+            res = await session.execute(query)
+            records = res.scalars().all()
+            return records
