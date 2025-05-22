@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Request
 
-from api.customers.schemas.customer import (
+from api.customers.schemas.customer_schema import (
     CustomerCreateSchema,
     CustomerSchema,
     CustomerDeleteSchema,
@@ -43,5 +43,5 @@ async def patch(request: Request, data: CustomerPatchSchema) -> CustomerSchema |
 
 
 @customer_router.get("/{id_}/cars")
-async def get_by_field(request: Request, id_: UUID) -> CustomerCarsSchema | None:
+async def get_cars(request: Request, id_: UUID) -> CustomerCarsSchema | None:
     return await request.state.customer_services.get_cars(id_)

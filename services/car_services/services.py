@@ -1,9 +1,7 @@
-from uuid import UUID
 from dataclasses import dataclass
+from uuid import UUID
 
-
-from core.db.models import CarModel
-from api.cars.schemas.schema import (
+from api.cars.schemas.car_schema import (
     CarCreateSchema,
     CarSchema,
     CarAlreadyExistsSchema,
@@ -11,8 +9,9 @@ from api.cars.schemas.schema import (
     CarDeletedSchema,
     CarPatchSchema,
 )
-from services.base_service import MainServices
+from core.db.models import CarModel
 from repository.car_repository.repository import CarRepository
+from services.base_service import MainServices
 from services.car_services.converter.car_converter import CarConverter
 from services.car_services.validator.car_validator import CarValidator
 
@@ -41,6 +40,8 @@ class CarServices(MainServices[CarModel, CarSchema]):
         if obj:
             return CarAlreadyExistsSchema(data=schema.gos_nomer)
 
+        schema.odometer_last = schema.odometer_registered
+
         model_create = await self.converter.schema_to_model(schema=schema)
         model = await super().create(model=model_create)
         return await self.converter.model_to_schema(model=model)
@@ -56,13 +57,13 @@ class CarServices(MainServices[CarModel, CarSchema]):
             return CarDeletedSchema(
                 data=await self.converter.model_to_schema(obj), msg="Object deleted"
             )
-        return None
+        return obj
 
     async def get_by_field(self, key: str, value: str) -> SCHEMA | None:
         obj = await super().get_by_field(key, value)
         if obj:
             return await self.converter.model_to_schema(obj)
-        return None
+        return obj
 
     async def partial_update(self, data: CarPatchSchema) -> SCHEMA | None:
         model = await super().get(data.id)

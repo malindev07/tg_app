@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from api.cars.schemas.schema import CarSchema, CarCreateSchema
+from api.cars.schemas.car_schema import CarSchema, CarCreateSchema
 from core.db.models import CarModel
 
 

@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from api.cars.schemas.schema import CarValidationInfoSchema
+from api.cars.schemas.car_schema import CarValidationInfoSchema
 
 
 @dataclass
