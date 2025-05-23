@@ -1,16 +1,19 @@
 from dataclasses import dataclass
 
+
 from api.records.schema.record_schema import (
     RecordSchema,
     RecordCreateSchema,
     RecordWithAssociationSchema,
 )
+
 from core.db.models.records import RecordModel
 
 
 @dataclass
 class RecordConverter:
     async def schema_to_model(
+
         self, schema: RecordSchema | RecordCreateSchema
     ) -> RecordModel:
         return RecordModel(
@@ -25,6 +28,7 @@ class RecordConverter:
 
     async def model_to_schema(self, model: RecordModel) -> RecordSchema:
         return RecordSchema(
+
             client_id=model.client_id,
             car_id=model.car_id,
             reason=model.reason,

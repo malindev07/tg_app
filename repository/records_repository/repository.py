@@ -4,10 +4,12 @@ from typing import Sequence
 from uuid import UUID
 
 from sqlalchemy import select
+
 from sqlalchemy.orm import selectinload
 
 from core.db.helper import db_helper
 from core.db.models.record_staff_association import RecordStaffAssociationModel
+
 from core.db.models.records import RecordModel
 from repository.base_repository import RepositoryORM
 
@@ -24,6 +26,7 @@ class RecordsRepository(RepositoryORM):
     ) -> MODEL:
         record = await super().create(model=model)
         return record
+
 
     async def get(self, id_: UUID) -> MODEL:
         return await super().get(id_=id_)
@@ -42,6 +45,7 @@ class RecordsRepository(RepositoryORM):
             res = await session.execute(query)
             records = res.scalars().all()
             return records
+
 
     async def create_with_association(self, model: MODEL, staff_id: list[UUID]):
         async with self.session_factory() as session:
@@ -66,3 +70,4 @@ class RecordsRepository(RepositoryORM):
             )
             record = result.scalars().first()
             return record
+

@@ -7,11 +7,13 @@ from api.cars.handlers.car_handler import car_router
 from api.customers.handlers.customer_handler import customer_router
 from api.health_check import health_router
 from api.records.handlers.records_handler import record_router
+
 from api.staff.handlers.staff_handler import staff_router
 from repository.car_repository.repository import CarRepository
 from repository.customers_repository.repository import CustomerRepository
 from repository.records_repository.repository import RecordsRepository
 from repository.staff_repository.repository import StaffRepository
+
 from services.car_services.converter.car_converter import CarConverter
 from services.car_services.services import CarServices
 from services.car_services.validator.car_validator import CarValidator
@@ -22,6 +24,7 @@ from services.records_services.converter.converter import RecordConverter
 from services.records_services.services import RecordsServices
 from services.staff_services.converter.converter import StaffConverter
 from services.staff_services.services import StaffServices
+
 
 
 @asynccontextmanager
@@ -35,6 +38,7 @@ async def lifespan(app: FastAPI):
         converter=CustomerConverter(),
     )
     records_services = RecordsServices(
+
         repository=RecordsRepository(),
         converter=RecordConverter(),
     )
@@ -42,11 +46,16 @@ async def lifespan(app: FastAPI):
         repository=StaffRepository(),
         converter=StaffConverter(),
     )
+        repository = RecordsRepository(),
+        converter = RecordConverter(),
+    )
+    
     yield {
         "car_services": car_services,
         "customer_services": customer_services,
         "records_services": records_services,
         "staff_services": staff_services,
+
     }
 
 
@@ -56,7 +65,9 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(car_router)
 app.include_router(customer_router)
 app.include_router(record_router)
+
 app.include_router(staff_router)
+
 app.include_router(health_router)
 
 

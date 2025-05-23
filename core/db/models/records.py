@@ -6,6 +6,7 @@ from uuid import UUID
 from sqlalchemy import func, ForeignKey, String, Date, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 from core.db.models.base import Base
 
 
@@ -32,6 +33,7 @@ class RecordModel(Base):
     comment: Mapped[str] = mapped_column(default="", nullable=True)
 
     record_date: Mapped[date] = mapped_column(Date, nullable=False)
+
     start_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
     end_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
 
@@ -42,6 +44,8 @@ class RecordModel(Base):
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
 
+
     staff_associations: Mapped[list["RecordStaffAssociationModel"]] = relationship(
         back_populates="record", cascade="all, delete-orphan"
     )
+
