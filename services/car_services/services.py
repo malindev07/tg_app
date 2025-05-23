@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from api.cars.schemas.schema import (
+
+from api.cars.schemas.car_schema import (
+
     CarCreateSchema,
     CarSchema,
     CarAlreadyExistsSchema,

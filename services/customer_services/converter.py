@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from api.cars.schemas.schema import CarSchema
-from api.customers.schemas.customer import CustomerSchema, CustomerCreateSchema
+from api.cars.schemas.car_schema import CarSchema
+from api.customers.schemas.customer_schema import CustomerSchema, CustomerCreateSchema
 from core.db.models import CarModel
 from core.db.models.customers import CustomerModel
 

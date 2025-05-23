@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Request
 
-from api.customers.schemas.customer import (
+from api.customers.schemas.customer_schema import (
     CustomerCreateSchema,
     CustomerSchema,
     CustomerDeleteSchema,

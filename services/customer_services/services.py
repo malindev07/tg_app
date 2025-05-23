@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from api.customers.schemas.customer import (
+from api.customers.schemas.customer_schema import (
     CustomerSchema,
     CustomerCreateSchema,
     CustomerDeleteSchema,

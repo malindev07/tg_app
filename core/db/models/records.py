@@ -4,7 +4,8 @@ from enum import Enum
 from uuid import UUID
 
 from sqlalchemy import func, ForeignKey, String, Date, Time
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 
 from core.db.models.base import Base
 
@@ -20,10 +21,8 @@ class RecordModel(Base):
     __tablename__ = "records"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    client_id: Mapped[UUID] = mapped_column(ForeignKey("customers.id"), nullable=True)
-    car_id: Mapped[UUID] = mapped_column(ForeignKey("cars.id"), nullable=True)
-    # workstation_id:Mapped[UUID] = mapped_column(ForeignKey("workstations.id"), nullable=False)
-    # master_id:Mapped[UUID]= mapped_column(ForeignKey("masters.id"), nullable=False)
+    client_id: Mapped[UUID] = mapped_column(ForeignKey("customers.id"), nullable=False)
+    car_id: Mapped[UUID] = mapped_column(ForeignKey("cars.id"), nullable=False)
 
     reason: Mapped[str] = mapped_column(
         String(1000), comment="Причина обращения (макс. 1000 символов)", nullable=False
@@ -34,8 +33,9 @@ class RecordModel(Base):
     comment: Mapped[str] = mapped_column(default="", nullable=True)
 
     record_date: Mapped[date] = mapped_column(Date, nullable=False)
-    start_time: Mapped[time] = mapped_column(Time(timezone = True), nullable = False)
-    end_time: Mapped[time] = mapped_column(Time(timezone = True), nullable = False)
+
+    start_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
+    end_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), nullable=False
@@ -43,5 +43,9 @@ class RecordModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
-    # works:
-    # parts:
+
+
+    staff_associations: Mapped[list["RecordStaffAssociationModel"]] = relationship(
+        back_populates="record", cascade="all, delete-orphan"
+    )
+

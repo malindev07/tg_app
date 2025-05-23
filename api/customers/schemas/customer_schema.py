@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from api.cars.schemas.schema import CarSchema
+from api.cars.schemas.car_schema import CarSchema
 
 
 class CustomerCreateSchema(BaseModel):
