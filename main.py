@@ -26,7 +26,6 @@ from services.staff_services.converter.converter import StaffConverter
 from services.staff_services.services import StaffServices
 
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     car_services = CarServices(
@@ -38,7 +37,6 @@ async def lifespan(app: FastAPI):
         converter=CustomerConverter(),
     )
     records_services = RecordsServices(
-
         repository=RecordsRepository(),
         converter=RecordConverter(),
     )
@@ -46,16 +44,14 @@ async def lifespan(app: FastAPI):
         repository=StaffRepository(),
         converter=StaffConverter(),
     )
-        repository = RecordsRepository(),
-        converter = RecordConverter(),
-    )
-    
+    repository = (RecordsRepository(),)
+    converter = (RecordConverter(),)
+
     yield {
         "car_services": car_services,
         "customer_services": customer_services,
         "records_services": records_services,
         "staff_services": staff_services,
-
     }
 
 
