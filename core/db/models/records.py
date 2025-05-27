@@ -6,7 +6,6 @@ from uuid import UUID
 from sqlalchemy import func, ForeignKey, String, Date, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
 from core.db.models.base import Base
 
 
@@ -43,7 +42,7 @@ class RecordModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
-
-    # staff_associations: Mapped[list["RecordStaffAssociationModel"]] = relationship(
-    #     back_populates="record", cascade="all, delete-orphan"
-    # )
+    
+    workstation_staff_associations: Mapped[
+        list["WorkstationStaffRecordAssociationModel"]
+    ] = relationship(back_populates = "record", cascade = "save-update, merge")

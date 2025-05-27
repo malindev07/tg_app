@@ -1,9 +1,9 @@
 import uuid
-from datetime import datetime
+from datetime import time
 from enum import Enum
 from uuid import UUID
 
-from sqlalchemy import func
+from sqlalchemy import Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.db.models.base import Base
@@ -33,3 +33,9 @@ class WorkstationModel(Base):
     description: Mapped[str] = mapped_column(
         nullable=False, default="Описание отсутствует"
     )
+    start_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
+    end_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
+
+    record_staff_associations: Mapped[
+        list["WorkstationStaffRecordAssociationModel"]
+    ] = relationship(back_populates="workstation", cascade="save-update, merge")

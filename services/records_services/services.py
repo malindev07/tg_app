@@ -4,14 +4,11 @@ from typing import Sequence
 from uuid import UUID
 
 from api.records.schema.record_schema import (
-
     RecordCreateSchema,
     RecordSchema,
     RecordDeleteSchema,
     RecordPatchSchema,
-
     RecordWithAssociationSchema,
-
 )
 from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
 from core.db.models.records import RecordModel
@@ -28,15 +25,14 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
     # validator: CustomerValidator
     converter: RecordConverter
 
-
     async def create(self, schema: RecordCreateSchema) -> SCHEMA:
         obj = await self.repository.create_with_association(
             model=await self.converter.schema_to_model(schema),
             staff_id=schema.staff_id,
+            workstation_id=schema.workstation_id,
         )
 
         return await self.converter.model_to_schema(obj)
-
 
     async def get(self, id_: UUID) -> SCHEMA | IDNotFoundSchema:
         obj = await super().get(id_=id_)
@@ -76,9 +72,7 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
 
         return None
 
-
     async def get_with_staff(self, record_id: UUID) -> RecordWithAssociationSchema:
         return await self.converter.model_with_association_to_schema(
             await self.repository.get_with_staff(record_id)
         )
-

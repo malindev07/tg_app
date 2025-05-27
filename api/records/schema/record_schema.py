@@ -10,7 +10,7 @@ class RecordCreateSchema(BaseModel):
     client_id: UUID
     car_id: UUID
     staff_id: list[UUID]
-    # workstation_id: UUID
+    workstation_id: UUID
     reason: str
     comment: str
     record_date: date
@@ -20,7 +20,7 @@ class RecordCreateSchema(BaseModel):
 
 class RecordPatchSchema(BaseModel):
     id: UUID
-    data: dict = Field(default_factory = dict)
+    data: dict = Field(default_factory=dict)
 
 
 class RecordWithAssociationSchema(BaseModel):
@@ -53,4 +53,4 @@ class RecordSchema(BaseModel):
 
 class RecordDeleteSchema(BaseModel):
     data: RecordSchema
-    msg: str = Field(default = "deleted")
+    msg: str = Field(default="deleted")
