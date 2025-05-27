@@ -31,9 +31,9 @@ from services.workstation_services.services import WorkstationServices
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     car_services = CarServices(
-        repository = CarRepository(),
-        validator = CarValidator(),
-        converter = CarConverter(),
+        repository=CarRepository(),
+        validator=CarValidator(),
+        converter=CarConverter(),
     )
     customer_services = CustomerServices(
         repository=CustomerRepository(),
@@ -49,8 +49,8 @@ async def lifespan(app: FastAPI):
         converter=StaffConverter(),
     )
     workstation_services = WorkstationServices(
-        repository = WorkstationRepository(),
-        converter = WorkstationConverter(),
+        repository=WorkstationRepository(),
+        converter=WorkstationConverter(),
     )
 
     yield {

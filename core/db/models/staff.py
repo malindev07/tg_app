@@ -51,7 +51,7 @@ class StaffModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
-    
+
     workstation_record_associations: Mapped[
         list["WorkstationStaffRecordAssociationModel"]
-    ] = relationship(back_populates = "staff", cascade = "save-update, merge")
+    ] = relationship(back_populates="staff", cascade="save-update, merge")

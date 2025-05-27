@@ -21,39 +21,39 @@ class WorkstationServices(MainServices[WorkstationModel, WorkstationSchema]):
     repository: WorkstationRepository
     # validator: CustomerValidator
     converter: WorkstationConverter
-    
+
     async def create(self, schema: WorkstationCreateSchema) -> SCHEMA:
         obj = await super().create(await self.converter.schema_to_model(schema))
-        
+
         return await self.converter.model_to_schema(obj)
-    
+
     async def get(self, id_: UUID) -> SCHEMA | IDNotFoundSchema:
-        obj = await super().get(id_ = id_)
+        obj = await super().get(id_=id_)
         if obj is not None:
             return await self.converter.model_to_schema(obj)
-        return IDNotFoundSchema(id_ = id_)
-    
+        return IDNotFoundSchema(id_=id_)
+
     async def delete(self, id_: UUID) -> WorkstationDeleteSchema | IDNotFoundSchema:
         obj = await super().delete(id_)
         if obj:
             return WorkstationDeleteSchema(
-                data = await self.converter.model_to_schema(obj), msg = "Object deleted"
+                data=await self.converter.model_to_schema(obj), msg="Object deleted"
             )
-        return IDNotFoundSchema(id_ = id_)
-    
+        return IDNotFoundSchema(id_=id_)
+
     async def get_by_field(
-            self, key: str, value: str
+        self, key: str, value: str
     ) -> SCHEMA | KeyValueNotFoundSchema:
         obj = await super().get_by_field(key, value)
         if obj:
             return await self.converter.model_to_schema(obj)
-        return KeyValueNotFoundSchema(data = dict[key, value])
-    
+        return KeyValueNotFoundSchema(data=dict[key, value])
+
     async def partial_update(
-            self, data: WorkstationPatchSchema
+        self, data: WorkstationPatchSchema
     ) -> SCHEMA | IDNotFoundSchema:
         model = await super().get(data.id)
         if model:
-            upd_model = await super().patch(id_ = data.id, data = data.data)
+            upd_model = await super().patch(id_=data.id, data=data.data)
             return await self.converter.model_to_schema(upd_model)
-        return IDNotFoundSchema(id_ = data.id)
+        return IDNotFoundSchema(id_=data.id)

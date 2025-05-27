@@ -42,7 +42,7 @@ class RecordModel(Base):
     updated_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
-    
+
     workstation_staff_associations: Mapped[
         list["WorkstationStaffRecordAssociationModel"]
-    ] = relationship(back_populates = "record", cascade = "save-update, merge")
+    ] = relationship(back_populates="record", cascade="save-update, merge")

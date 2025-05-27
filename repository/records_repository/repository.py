@@ -42,9 +42,9 @@ class RecordsRepository(RepositoryORM):
             res = await session.execute(query)
             records = res.scalars().all()
             return records
-    
+
     async def create_with_association(
-            self, model: MODEL, staff_id: list[UUID], workstation_id: UUID
+        self, model: MODEL, staff_id: list[UUID], workstation_id: UUID
     ):
         async with self.session_factory() as session:
             try:
@@ -54,16 +54,16 @@ class RecordsRepository(RepositoryORM):
                     for id_ in staff_id:
                         session.add(
                             self.RECORD_STAFF_WORKSTATION_ASSOCIATION_MODEL(
-                                record_id = model.id,
-                                staff_id = id_,
-                                workstation_id = workstation_id,
+                                record_id=model.id,
+                                staff_id=id_,
+                                workstation_id=workstation_id,
                             )
                         )
                     await session.commit()
             except Exception as e:
                 await session.rollback()
                 raise e
-            
+
             return model
 
     async def get_with_staff(self, record_id: UUID):
