@@ -6,6 +6,7 @@ from uuid import UUID
 from sqlalchemy import func, ForeignKey, String, Date, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+
 from core.db.models.base import Base
 
 
