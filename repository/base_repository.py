@@ -1,36 +1,34 @@
-from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 from uuid import UUID
 
-
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from core.db.generics import ModelType
 from core.db.helper import db_helper
 
 
+# @dataclass
+# class RepositoryBase(ABC):
+#     MODEL = ModelType
+#     session_factory: async_sessionmaker[AsyncSession] = db_helper.session_factory
+#
+#     @abstractmethod
+#     async def create(self, model: MODEL) -> MODEL: ...
+#
+#     @abstractmethod
+#     async def get(self, id_: UUID) -> MODEL: ...
+#
+#     @abstractmethod
+#     async def get_by_field(self, key: str, value: str) -> MODEL | None: ...
+#
+#     @abstractmethod
+#     async def delete(self, id_: UUID) -> MODEL: ...
+#
+
+
 @dataclass
-class RepositoryBase(ABC):
-    MODEL = ModelType
-    session_factory: async_sessionmaker[AsyncSession] = db_helper.session_factory
-
-    @abstractmethod
-    async def create(self, model: MODEL) -> MODEL: ...
-
-    @abstractmethod
-    async def get(self, id_: UUID) -> MODEL: ...
-
-    @abstractmethod
-    async def get_by_field(self, key: str, value: str) -> MODEL | None: ...
-
-    @abstractmethod
-    async def delete(self, id_: UUID) -> MODEL: ...
-
-
-@dataclass
-class RepositoryORM(RepositoryBase):
+class RepositoryORM:
     MODEL = ModelType
     session_factory = db_helper.session_factory
 
