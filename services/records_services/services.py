@@ -9,6 +9,7 @@ from api.records.schema.record_schema import (
     RecordDeleteSchema,
     RecordPatchSchema,
     RecordWithAssociationSchema,
+    RecordWithStaffSchema,
 )
 from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
 from core.db.models.records import RecordModel
@@ -72,7 +73,15 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
 
         return None
 
-    async def get_with_staff(self, record_id: UUID) -> RecordWithAssociationSchema:
-        return await self.converter.model_with_association_to_schema(
+    async def get_with_staff(self, record_id: UUID) -> RecordWithStaffSchema:
+        return await self.converter.model_with_staff_to_schema(
             await self.repository.get_with_staff(record_id)
         )
+
+    async def get_by_date_and_workstation(
+        self, rec_date: date, workstation_id: UUID
+    ) -> Sequence[RecordWithAssociationSchema]:
+        records = await self.repository.get_by_date_and_workstation(
+            rec_date, workstation_id
+        )
+        return await self.converter.model_with_association_to_schema(records)

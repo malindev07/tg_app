@@ -70,8 +70,27 @@ class RecordsRepository(RepositoryORM):
         async with self.session_factory() as session:
             result = await session.execute(
                 select(RecordModel)
-                .options(selectinload(RecordModel.staff_associations))
+                .options(selectinload(RecordModel.workstation_staff_associations))
                 .where(RecordModel.id == record_id)
             )
             record = result.scalars().first()
             return record
+
+    async def get_by_date_and_workstation(self, rec_date: date, workstation_id: UUID):
+        async with self.session_factory() as session:
+            query = (
+                select(RecordModel)
+                .join(
+                    WorkstationStaffRecordAssociationModel,
+                    RecordModel.id == WorkstationStaffRecordAssociationModel.record_id,
+                )
+                .where(
+                    RecordModel.record_date == rec_date,
+                    WorkstationStaffRecordAssociationModel.workstation_id
+                    == workstation_id,
+                )
+                .options(selectinload(RecordModel.workstation_staff_associations))
+            )
+            res = await session.execute(query)
+            records = res.scalars().all()
+            return records
