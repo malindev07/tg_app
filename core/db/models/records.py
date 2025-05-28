@@ -47,3 +47,7 @@ class RecordModel(Base):
     workstation_staff_associations: Mapped[
         list["WorkstationStaffRecordAssociationModel"]
     ] = relationship(back_populates="record", cascade="save-update, merge")
+
+    # workstation_staff_associations: Mapped["WorkstationStaffRecordAssociationModel"] = (
+    #     relationship(back_populates="record", cascade="save-update, merge")
+    # )

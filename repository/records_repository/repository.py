@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from datetime import date, time
+from datetime import date
 from typing import Sequence
 from uuid import UUID
 
 from sqlalchemy import select
-
 from sqlalchemy.orm import selectinload
 
 from core.db.helper import db_helper
@@ -25,7 +24,6 @@ class RecordsRepository(RepositoryORM):
     ) -> MODEL:
         record = await super().create(model=model)
         return record
-
 
     async def get(self, id_: UUID) -> MODEL:
         return await super().get(id_=id_)
@@ -72,24 +70,26 @@ class RecordsRepository(RepositoryORM):
         async with self.session_factory() as session:
             result = await session.execute(
                 select(RecordModel)
-                .options(selectinload(RecordModel.staff_associations))
+                .options(selectinload(RecordModel.workstation_staff_associations))
                 .where(RecordModel.id == record_id)
             )
             record = result.scalars().first()
             return record
 
-    async def get_by_date_and_workstation(
-        self, rec_date: date, rec_time: dict[time, time], workstation_id: UUID
-    ):
+    async def get_by_date_and_workstation(self, rec_date: date, workstation_id: UUID):
         async with self.session_factory() as session:
             query = (
                 select(RecordModel)
-                .where(RecordModel.record_date == rec_date)
-                .options(selectinload(RecordModel.workstation_staff_associations))
-                .where(
-                    self.RECORD_STAFF_WORKSTATION_ASSOCIATION_MODEL.workstation_id
-                    == workstation_id
+                .join(
+                    WorkstationStaffRecordAssociationModel,
+                    RecordModel.id == WorkstationStaffRecordAssociationModel.record_id,
                 )
+                .where(
+                    RecordModel.record_date == rec_date,
+                    WorkstationStaffRecordAssociationModel.workstation_id
+                    == workstation_id,
+                )
+                .options(selectinload(RecordModel.workstation_staff_associations))
             )
             res = await session.execute(query)
             records = res.scalars().all()

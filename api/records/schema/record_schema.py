@@ -23,8 +23,22 @@ class RecordPatchSchema(BaseModel):
     data: dict = Field(default_factory=dict)
 
 
+class RecordWithStaffSchema(BaseModel):
+    id: UUID
+    client_id: UUID
+    car_id: UUID
+    staff_id: list[UUID]
+    reason: str
+    status: RecordStatus
+    comment: str
+    record_date: date
+    start_time: time
+    end_time: time
+
+
 class RecordWithAssociationSchema(BaseModel):
     id: UUID
+    workstation_id: UUID
     client_id: UUID
     car_id: UUID
     staff_id: list[UUID]
