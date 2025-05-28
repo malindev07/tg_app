@@ -4,11 +4,10 @@ from core.db.models.customers import CustomerModel
 from core.db.models.record_staff_association import RecordStaffAssociationModel
 from core.db.models.records import RecordStatus
 from core.db.models.staff import StaffModel
-from core.db.models.workstations import WorkstationModel
-
 from core.db.models.workstation_record_staff_association import (
     WorkstationStaffRecordAssociationModel,
 )
+from core.db.models.workstations import WorkstationModel
 
 __all__ = [
     "Base",
@@ -20,3 +19,4 @@ __all__ = [
     "WorkstationModel",
     "WorkstationStaffRecordAssociationModel",
 ]
+

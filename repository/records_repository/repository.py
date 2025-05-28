@@ -4,6 +4,7 @@ from typing import Sequence
 from uuid import UUID
 
 from sqlalchemy import select
+
 from sqlalchemy.orm import selectinload
 
 from core.db.helper import db_helper
@@ -24,6 +25,7 @@ class RecordsRepository(RepositoryORM):
     ) -> MODEL:
         record = await super().create(model=model)
         return record
+
 
     async def get(self, id_: UUID) -> MODEL:
         return await super().get(id_=id_)

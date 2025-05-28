@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from core.db.models import Base
 
@@ -25,6 +25,6 @@ class RecordStaffAssociationModel(Base):
         server_default=func.now(), comment="Дата и время обновления"
     )
 
-    # Опциональные отношения для удобства доступа
-    record: Mapped["RecordModel"] = relationship(back_populates="staff_associations")
-    staff: Mapped["StaffModel"] = relationship(back_populates="record_associations")
+    # # Опциональные отношения для удобства доступа
+    # record: Mapped["RecordModel"] = relationship(back_populates="staff_associations")
+    # staff: Mapped["StaffModel"] = relationship(back_populates="record_associations")

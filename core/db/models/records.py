@@ -44,9 +44,6 @@ class RecordModel(Base):
         server_default=func.now(), onupdate=func.now(), nullable=False
     )
 
-    staff_associations: Mapped[list["WorkstationStaffRecordAssociationModel"]] = (
-        relationship(back_populates="record", cascade="all, delete-orphan")
-    )
-    workstation_associations: Mapped[list["WorkstationStaffRecordAssociationModel"]] = (
-        relationship(back_populates="staff", cascade="all, delete-orphan")
-    )
+    workstation_staff_associations: Mapped[
+        list["WorkstationStaffRecordAssociationModel"]
+    ] = relationship(back_populates="record", cascade="save-update, merge")

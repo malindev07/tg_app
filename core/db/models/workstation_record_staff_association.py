@@ -11,7 +11,7 @@ class WorkstationStaffRecordAssociationModel(Base):
     __tablename__ = "workstation_staff_record_association"
 
     workstation_id: Mapped[UUID] = mapped_column(
-        ForeignKey("workstations.id"), primary_key=True, comment="ID станции"
+        ForeignKey("workstations.id"), primary_key=True, comment="ID записи"
     )
     record_id: Mapped[UUID] = mapped_column(
         ForeignKey("records.id"), primary_key=True, comment="ID записи"
@@ -26,8 +26,12 @@ class WorkstationStaffRecordAssociationModel(Base):
         server_default=func.now(), comment="Дата и время обновления"
     )
 
-    record: Mapped["RecordModel"] = relationship(back_populates="staff_associations")
-    staff: Mapped["StaffModel"] = relationship(back_populates="record_associations")
+    record: Mapped["RecordModel"] = relationship(
+        back_populates="workstation_staff_associations"
+    )
+    staff: Mapped["StaffModel"] = relationship(
+        back_populates="workstation_record_associations"
+    )
     workstation: Mapped["WorkstationModel"] = relationship(
-        back_populates="workstation_associations"
+        back_populates="record_staff_associations"
     )
