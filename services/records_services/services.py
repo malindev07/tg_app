@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, time
 from typing import Sequence
 from uuid import UUID
 
@@ -80,5 +80,12 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
     async def get_with_staff(self, record_id: UUID) -> RecordWithAssociationSchema:
         return await self.converter.model_with_association_to_schema(
             await self.repository.get_with_staff(record_id)
+        )
+
+    async def get_by_date_and_workstation(
+        self, rec_date: date, rec_time: dict[time, time], workstation_id: UUID
+    ):
+        return await self.repository.get_by_date_and_workstation(
+            rec_date, rec_time, workstation_id
         )
 
