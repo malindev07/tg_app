@@ -36,7 +36,7 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
         if valid_time_distance:
             print("Минимальное время записи верное")
         else:
-            print("Минимальное время записи неверное")
+            print("Минимальное   время записи неверное")
 
         valid_time_slot = self.validator.validate_record_slot(
             start_time=schema.start_time,
