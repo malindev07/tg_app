@@ -71,7 +71,6 @@ async def get_by_date_and_workstation(
     # start_time: str = Query(..., description="Start time in HH:MM format"),
     # end_time: str = Query(..., description="End time in HH:MM format"),
 ) -> Sequence[RecordWithAssociationSchema]:
-
     return await request.state.records_services.get_by_date_and_workstation(
         rec_date, workstation_id
     )
