@@ -16,6 +16,9 @@ from core.db.models.records import RecordModel
 from repository.records_repository.repository import RecordsRepository
 from services.base_service import MainServices
 from services.records_services.converter.converter import RecordConverter
+from services.records_services.validator.record_validator import RecordValidator
+
+MIN_RECORD_TIME = 30
 
 
 @dataclass
@@ -23,10 +26,30 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
     MODEL = RecordModel
     SCHEMA = RecordSchema
     repository: RecordsRepository
-    # validator: CustomerValidator
+    validator: RecordValidator
     converter: RecordConverter
 
     async def create(self, schema: RecordCreateSchema) -> SCHEMA:
+        valid_time_distance = self.validator.validate_record_time_distance(
+            start_time=schema.start_time, end_time=schema.end_time
+        )
+        if valid_time_distance:
+            print("Минимальное время записи верное")
+        else:
+            print("Минимальное время записи неверное")
+
+        valid_time_slot = self.validator.validate_record_slot(
+            start_time=schema.start_time,
+            end_time=schema.end_time,
+            records=await self.get_by_date_and_workstation(
+                schema.record_date, schema.workstation_id
+            ),
+        )
+        if valid_time_slot:
+            print("Есть пересечение слотов")
+        else:
+            print("Нет пересечения слотов")
+
         obj = await self.repository.create_with_association(
             model=await self.converter.schema_to_model(schema),
             staff_id=schema.staff_id,
@@ -84,4 +107,6 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
         records = await self.repository.get_by_date_and_workstation(
             rec_date, workstation_id
         )
-        return await self.converter.model_with_association_to_schema(records)
+        return await self.converter.model_with_association_to_schema(
+            records
+        )  # TODO Уточнить как возвращать из одной сущности другую(в записи указывать фио мастера)
