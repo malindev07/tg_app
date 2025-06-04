@@ -15,5 +15,5 @@ class KeyValueNotFoundSchema(BaseModel):
 
 
 class ValidationInfoSchema(BaseModel):
-    name: str = Field(default = str)
-    data: list = Field(default_factory = list)
+    name: str = Field(default=str)
+    data: list = Field(default_factory=list)
