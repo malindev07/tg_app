@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field, ConfigDict
@@ -20,7 +20,7 @@ class CarGetByFieldSchema(BaseModel):
 
 
 class CarValidationInfoSchema(BaseModel):
-    data: list = Field(default_factory=list)
+    data: list[dict[Any, Any]] = Field(default=[])
 
 
 class CarAlreadyExistsSchema(BaseModel):
@@ -30,7 +30,7 @@ class CarAlreadyExistsSchema(BaseModel):
 
 class CarPatchSchema(BaseModel):
     id: UUID
-    data: dict = Field(default_factory=dict)
+    data: dict[Any, Any] = Field(default={})
 
 
 class CarSchema(BaseModel):

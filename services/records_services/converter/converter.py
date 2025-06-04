@@ -7,7 +7,6 @@ from api.records.schema.record_schema import (
     RecordWithAssociationSchema,
     RecordWithStaffSchema,
 )
-
 from core.db.models.records import RecordModel
 
 
@@ -38,8 +37,10 @@ class RecordConverter:
             id=model.id,
             status=model.status,
         )
-
-    async def model_with_staff_to_schema(self, model: RecordModel):
+    
+    async def model_with_staff_to_schema(
+            self, model: RecordModel
+    ) -> RecordWithStaffSchema:
         staff_ids = [
             association.staff_id for association in model.workstation_staff_associations
         ]

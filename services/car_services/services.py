@@ -1,16 +1,14 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-
 from api.cars.schemas.car_schema import (
-
     CarCreateSchema,
     CarSchema,
     CarAlreadyExistsSchema,
-    CarValidationInfoSchema,
     CarDeletedSchema,
     CarPatchSchema,
 )
+from api.response import ValidationInfoSchema
 from core.db.models import CarModel
 from repository.car_repository.repository import CarRepository
 from services.base_service import MainServices
@@ -28,9 +26,9 @@ class CarServices(MainServices[CarModel, CarSchema]):
 
     async def create(
         self, schema: CarCreateSchema
-    ) -> SCHEMA | CarAlreadyExistsSchema | CarValidationInfoSchema:
+    ) -> SCHEMA | CarAlreadyExistsSchema | ValidationInfoSchema:
 
-        validation_res: CarValidationInfoSchema = self.validator.is_validate(
+        validation_res = self.validator.is_validate(
             vin=schema.vin,
             gos_nomer=schema.gos_nomer,
         )

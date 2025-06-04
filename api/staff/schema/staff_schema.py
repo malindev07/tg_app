@@ -17,7 +17,7 @@ class StaffCreateSchema(BaseModel):
 
 class StaffPatchSchema(BaseModel):
     id: UUID
-    data: dict = Field(default_factory=dict)
+    data: dict[str, str] = Field(default = {})
 
 
 class StaffSchema(BaseModel):

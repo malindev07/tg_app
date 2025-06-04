@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -15,7 +15,7 @@ class CustomerCreateSchema(BaseModel):
 
 class CustomerPatchSchema(BaseModel):
     id: UUID
-    data: dict = Field(default_factory=dict)
+    data: dict[Any, Any] = Field(default = {})
 
 
 class CustomerValidateErrorPhoneSchema(BaseModel):

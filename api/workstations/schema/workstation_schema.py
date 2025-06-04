@@ -1,4 +1,5 @@
 from datetime import time
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -15,7 +16,7 @@ class WorkstationCreateSchema(BaseModel):
 
 class WorkstationPatchSchema(BaseModel):
     id: UUID
-    data: dict = Field(default_factory=dict)
+    data: dict[Any, Any] = Field(default = {})
 
 
 class WorkstationSchema(BaseModel):

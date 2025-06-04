@@ -20,7 +20,7 @@ class RecordCreateSchema(BaseModel):
 
 class RecordPatchSchema(BaseModel):
     id: UUID
-    data: dict = Field(default_factory=dict)
+    data: dict[str, str] = Field(default = {})
 
 
 class RecordWithStaffSchema(BaseModel):

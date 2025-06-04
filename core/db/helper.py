@@ -1,10 +1,9 @@
-import asyncio
+from typing import AsyncGenerator
 
 from sqlalchemy import text
-from typing import AsyncGenerator
-from core.db.models.base import Base
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
+from core.db.models.base import Base
 from core.db.settings.settings import Settings
 
 
@@ -37,8 +36,8 @@ class DatabaseHelper:
             return True
         except Exception as e:
             raise e
-
-    async def recreate_all(self):
+    
+    async def recreate_all(self) -> None:
         async with self.engine.begin() as conn:
             try:
                 await conn.run_sync(Base.metadata.drop_all)
