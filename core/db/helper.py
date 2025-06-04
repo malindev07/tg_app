@@ -36,7 +36,7 @@ class DatabaseHelper:
             return True
         except Exception as e:
             raise e
-    
+
     async def recreate_all(self) -> None:
         async with self.engine.begin() as conn:
             try:

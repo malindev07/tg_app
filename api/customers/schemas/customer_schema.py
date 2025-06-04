@@ -15,7 +15,7 @@ class CustomerCreateSchema(BaseModel):
 
 class CustomerPatchSchema(BaseModel):
     id: UUID
-    data: dict[Any, Any] = Field(default = {})
+    data: dict[Any, Any] = Field(default={})
 
 
 class CustomerValidateErrorPhoneSchema(BaseModel):

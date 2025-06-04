@@ -37,7 +37,7 @@ class RecordConverter:
             id=model.id,
             status=model.status,
         )
-    
+
     async def model_with_staff_to_schema(
             self, model: RecordModel
     ) -> RecordWithStaffSchema:
