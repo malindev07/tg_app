@@ -16,7 +16,7 @@ class WorkstationCreateSchema(BaseModel):
 
 class WorkstationPatchSchema(BaseModel):
     id: UUID
-    data: dict[Any, Any] = Field(default = {})
+    data: dict[Any, Any] = Field(default={})
 
 
 class WorkstationSchema(BaseModel):
