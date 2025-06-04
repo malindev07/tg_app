@@ -11,7 +11,7 @@ from api.records.schema.record_schema import (
     RecordWithAssociationSchema,
     RecordWithStaffSchema,
 )
-from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
+from api.response import IDNotFoundSchema, KeyValueNotFoundSchema, ValidationInfoSchema
 from core.db.models.records import RecordModel
 from repository.records_repository.repository import RecordsRepository
 from services.base_service import MainServices
@@ -28,27 +28,18 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
     repository: RecordsRepository
     validator: RecordValidator
     converter: RecordConverter
-
-    async def create(self, schema: RecordCreateSchema) -> SCHEMA:
-        valid_time_distance = self.validator.validate_record_time_distance(
-            start_time=schema.start_time, end_time=schema.end_time
-        )
-        if valid_time_distance:
-            print("Минимальное время записи верное")
-        else:
-            print("Минимальное   время записи неверное")
-
-        valid_time_slot = self.validator.validate_record_slot(
+    
+    async def create(self, schema: RecordCreateSchema) -> SCHEMA | ValidationInfoSchema:
+        validation_info = self.validator.is_validate(
             start_time=schema.start_time,
             end_time=schema.end_time,
             records=await self.get_by_date_and_workstation(
                 schema.record_date, schema.workstation_id
             ),
         )
-        if valid_time_slot:
-            print("Есть пересечение слотов")
-        else:
-            print("Нет пересечения слотов")
+        
+        if validation_info.data:
+            return validation_info
 
         obj = await self.repository.create_with_association(
             model=await self.converter.schema_to_model(schema),

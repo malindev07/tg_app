@@ -12,3 +12,8 @@ class IDNotFoundSchema(BaseModel):
 class KeyValueNotFoundSchema(BaseModel):
     data: dict[Any, Any]
     msg: str = Field(default="Not found")
+
+
+class ValidationInfoSchema(BaseModel):
+    name: str = Field(default = str)
+    data: list = Field(default_factory = list)

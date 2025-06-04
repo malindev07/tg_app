@@ -13,15 +13,18 @@ from api.records.schema.record_schema import (
     RecordWithAssociationSchema,
     RecordWithStaffSchema,
 )
-from api.response import KeyValueNotFoundSchema, IDNotFoundSchema
+from api.response import KeyValueNotFoundSchema, IDNotFoundSchema, ValidationInfoSchema
 
 record_router = APIRouter(prefix="/record", tags=["Record"])
 
 
 @record_router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=RecordSchema
+    "/",
+    status_code = status.HTTP_201_CREATED,
 )
-async def create(request: Request, data: RecordCreateSchema) -> RecordSchema:
+async def create(
+        request: Request, data: RecordCreateSchema
+) -> RecordSchema | ValidationInfoSchema:
 
     return await request.state.records_services.create(schema=data)
 
