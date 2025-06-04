@@ -39,7 +39,7 @@ class RecordConverter:
         )
 
     async def model_with_staff_to_schema(
-            self, model: RecordModel
+        self, model: RecordModel
     ) -> RecordWithStaffSchema:
         staff_ids = [
             association.staff_id for association in model.workstation_staff_associations
