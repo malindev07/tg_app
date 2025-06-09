@@ -14,7 +14,7 @@ class RecordValidator:
     MIN_REPAIR_TIME: timedelta = timedelta(minutes=30)
     validation_name: str = "Record Validation"
 
-    def _validate_record_time_distance(
+    async def _validate_record_time_distance(
         self, start_time: time, end_time: time
     ) -> dict[str, str]:
         start_dt = datetime.combine(datetime.today(), start_time)
@@ -28,7 +28,7 @@ class RecordValidator:
             }
 
     @staticmethod
-    def _validate_record_slot(
+    async def _validate_record_slot(
         start_time: time,
         end_time: time,
         records: Sequence[RecordWithAssociationSchema],
@@ -47,7 +47,16 @@ class RecordValidator:
 
         return {}
 
-    def is_validate(
+    @staticmethod
+    async def _validate_staff_free_time(
+        start_time: time,
+        end_time: time,
+        records: Sequence[RecordWithAssociationSchema],
+    ):
+        # for record in records:
+        pass
+
+    async def is_validate(
         self,
         start_time: time,
         end_time: time,

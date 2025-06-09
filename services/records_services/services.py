@@ -28,16 +28,16 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
     repository: RecordsRepository
     validator: RecordValidator
     converter: RecordConverter
-    
+
     async def create(self, schema: RecordCreateSchema) -> SCHEMA | ValidationInfoSchema:
-        validation_info = self.validator.is_validate(
+        validation_info = await self.validator.is_validate(
             start_time=schema.start_time,
             end_time=schema.end_time,
             records=await self.get_by_date_and_workstation(
                 schema.record_date, schema.workstation_id
             ),
         )
-        
+
         if validation_info.data:
             return validation_info
 

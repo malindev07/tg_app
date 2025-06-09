@@ -77,6 +77,7 @@ class RecordsRepository(RepositoryORM):
             return record
 
     async def get_by_date_and_workstation(self, rec_date: date, workstation_id: UUID):
+        # TODO исправить!!! Неправильно отдает данные
         async with self.session_factory() as session:
             query = (
                 select(RecordModel)
