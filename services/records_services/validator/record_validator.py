@@ -41,20 +41,12 @@ class RecordValidator:
             start_dt = datetime.combine(datetime.today(), record.start_time)
             end_dt = datetime.combine(datetime.today(), record.end_time)
             if (start_dt_new < end_dt) and (end_dt_new > start_dt):
+
                 return {
                     record.id: f"Время с {record.start_time} до {record.end_time} занято"
                 }
 
         return {}
-
-    @staticmethod
-    async def _validate_staff_free_time(
-        start_time: time,
-        end_time: time,
-        records: Sequence[RecordWithAssociationSchema],
-    ):
-        # for record in records:
-        pass
 
     async def is_validate(
         self,
@@ -62,10 +54,12 @@ class RecordValidator:
         end_time: time,
         records: Sequence[RecordWithAssociationSchema],
     ) -> ValidationInfoSchema:
-        validate_record_time_distance = self._validate_record_time_distance(
+        validate_record_time_distance = await self._validate_record_time_distance(
             start_time, end_time
         )
-        validate_record_slot = self._validate_record_slot(start_time, end_time, records)
+        validate_record_slot = await self._validate_record_slot(
+            start_time, end_time, records
+        )
 
         validation_info = ValidationInfoSchema()
         validation_info.name = self.validation_name

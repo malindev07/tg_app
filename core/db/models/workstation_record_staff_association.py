@@ -20,10 +20,10 @@ class WorkstationStaffRecordAssociationModel(Base):
         ForeignKey("staff.id"), primary_key=True, comment="ID сотрудника"
     )
     created_at: Mapped[datetime] = mapped_column(
-        server_default=func.now(), comment="Дата и время создания"
+        server_default=func.now(), nullable=False
     )
-    update_at: Mapped[datetime] = mapped_column(
-        server_default=func.now(), comment="Дата и время обновления"
+    updated_at: Mapped[datetime] = mapped_column(
+        server_default=func.now(), onupdate=func.now(), nullable=False
     )
 
     record: Mapped["RecordModel"] = relationship(

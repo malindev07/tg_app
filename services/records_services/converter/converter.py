@@ -16,7 +16,6 @@ class RecordConverter:
         self, schema: RecordSchema | RecordCreateSchema
     ) -> RecordModel:
         return RecordModel(
-            client_id=schema.client_id,
             car_id=schema.car_id,
             reason=schema.reason,
             comment=schema.comment,
@@ -27,7 +26,6 @@ class RecordConverter:
 
     async def model_to_schema(self, model: RecordModel) -> RecordSchema:
         return RecordSchema(
-            client_id=model.client_id,
             car_id=model.car_id,
             reason=model.reason,
             comment=model.comment,
@@ -46,7 +44,6 @@ class RecordConverter:
         ]
 
         return RecordWithStaffSchema(
-            client_id=model.client_id,
             car_id=model.car_id,
             reason=model.reason,
             comment=model.comment,
@@ -73,7 +70,6 @@ class RecordConverter:
             ].workstation_id  # TODO ПОДУМАТЬ КАК ИСПРАВИТЬ
             records.append(
                 RecordWithAssociationSchema(
-                    client_id=model.client_id,
                     workstation_id=workstation_id,
                     car_id=model.car_id,
                     reason=model.reason,

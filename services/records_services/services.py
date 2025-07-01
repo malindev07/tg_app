@@ -30,11 +30,12 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
     converter: RecordConverter
 
     async def create(self, schema: RecordCreateSchema) -> SCHEMA | ValidationInfoSchema:
+
         validation_info = await self.validator.is_validate(
             start_time=schema.start_time,
             end_time=schema.end_time,
-            records=await self.get_by_date_and_workstation(
-                schema.record_date, schema.workstation_id
+            records=await self.get_by_date_and_staff(
+                schema.record_date, schema.staff_id
             ),
         )
 
@@ -101,3 +102,10 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
         return await self.converter.model_with_association_to_schema(
             records
         )  # TODO Уточнить как возвращать из одной сущности другую(в записи указывать фио мастера)
+
+    async def get_by_date_and_staff(
+        self, rec_date: date, staff_id: UUID
+    ) -> Sequence[RecordWithAssociationSchema]:
+        records = await self.repository.get_by_date_and_staff(rec_date, staff_id)
+
+        return await self.converter.model_with_association_to_schema(records)

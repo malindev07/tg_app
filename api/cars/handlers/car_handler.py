@@ -1,5 +1,6 @@
 from uuid import UUID
 
+import httpx
 from fastapi import APIRouter, Request
 
 from api.cars.schemas.car_schema import (
@@ -7,17 +8,26 @@ from api.cars.schemas.car_schema import (
     CarDeletedSchema,
     CarSchema,
     CarAlreadyExistsSchema,
-    CarValidationInfoSchema,
     CarPatchSchema,
 )
+from api.response import ValidationInfoSchema, IDNotFoundSchema
+from api.url_settings import UrlPrefix
 
-car_router = APIRouter(prefix="/car", tags=["Car"])
+car_router = APIRouter(prefix=UrlPrefix.car, tags=["Car"])
+
+
+async def call_customer_get_endpoint(id_: UUID):
+    async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
+        response = await client.get(f"/customer/", params={"id_": str(id_)})
+        return response.json()
 
 
 @car_router.post("/")
 async def create(
     request: Request, schema: CarCreateSchema
-) -> CarSchema | CarAlreadyExistsSchema | CarValidationInfoSchema:
+) -> CarSchema | CarAlreadyExistsSchema | ValidationInfoSchema | IDNotFoundSchema:
+    if await call_customer_get_endpoint(schema.owner_id) is None:
+        return IDNotFoundSchema(id_=schema.owner_id, msg="Owner not found")
     return await request.state.car_services.create(schema=schema)
 
 

@@ -10,6 +10,7 @@ from api.customers.schemas.customer_schema import (
     CustomerAlreadyExistsSchema,
     CustomerCarsSchema,
 )
+from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
 from core.db.models.customers import CustomerModel
 from repository.customers_repository.repository import CustomerRepository
 from services.base_service import MainServices
@@ -39,34 +40,38 @@ class CustomerServices(MainServices[CustomerModel, CustomerSchema]):
         obj = await super().create(await self.converter.schema_to_model(schema))
         return await self.converter.model_to_schema(obj)
 
-    async def get(self, id_: UUID) -> SCHEMA | None:
+    async def get(self, id_: UUID) -> SCHEMA | IDNotFoundSchema:
         obj = await super().get(id_=id_)
         if obj is not None:
             return await self.converter.model_to_schema(obj)
-        return obj
+        return IDNotFoundSchema(id_=id_)
 
-    async def delete(self, id_: UUID) -> CustomerDeleteSchema | None:
+    async def delete(self, id_: UUID) -> CustomerDeleteSchema | IDNotFoundSchema:
         obj = await super().delete(id_)
         if obj:
             return CustomerDeleteSchema(
                 data=await self.converter.model_to_schema(obj), msg="Object deleted"
             )
-        return obj
+        return IDNotFoundSchema(id_=id_)
 
-    async def get_by_field(self, key: str, value: str) -> SCHEMA | None:
+    async def get_by_field(
+        self, key: str, value: str
+    ) -> SCHEMA | KeyValueNotFoundSchema:
         obj = await super().get_by_field(key, value)
         if obj:
             return await self.converter.model_to_schema(obj)
-        return obj
+        return KeyValueNotFoundSchema(data={key: value})
 
-    async def partial_update(self, data: CustomerPatchSchema) -> SCHEMA | None:
+    async def partial_update(
+        self, data: CustomerPatchSchema
+    ) -> SCHEMA | IDNotFoundSchema:
         model = await super().get(data.id)
         if model:
             upd_model = await super().patch(id_=data.id, data=data.data)
             return await self.converter.model_to_schema(upd_model)
-        return model
+        return IDNotFoundSchema(id_=data.id)
 
-    async def get_cars(self, id_: UUID) -> CustomerCarsSchema | None:
+    async def get_cars(self, id_: UUID) -> CustomerCarsSchema | IDNotFoundSchema:
         obj = await super().get(id_=id_)
         if obj is not None:
             cars = await self.repository.get_cars(id_)
@@ -76,4 +81,4 @@ class CustomerServices(MainServices[CustomerModel, CustomerSchema]):
                     await self.converter.car_model_to_customer_schema(model=car)
                 )
             return customer_cars
-        return obj
+        return IDNotFoundSchema(id_=id_)

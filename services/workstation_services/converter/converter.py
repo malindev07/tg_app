@@ -14,6 +14,7 @@ class WorkstationConverter:
     ) -> WorkstationModel:
         return WorkstationModel(
             title=schema.title,
+            post_number=schema.post_number,
             description=schema.description,
             start_time=schema.start_time,
             end_time=schema.end_time,
@@ -23,6 +24,7 @@ class WorkstationConverter:
         return WorkstationSchema(
             id=model.id,
             title=model.title,
+            post_number=model.post_number,
             status=model.status,
             description=model.description,
             start_time=model.start_time,

@@ -11,8 +11,10 @@ from api.customers.schemas.customer_schema import (
     CustomerAlreadyExistsSchema,
     CustomerCarsSchema,
 )
+from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
+from api.url_settings import UrlPrefix
 
-customer_router = APIRouter(prefix="/customer", tags=["Customer"])
+customer_router = APIRouter(prefix=UrlPrefix.customer, tags=["Customer"])
 
 
 @customer_router.post("/")
@@ -23,17 +25,21 @@ async def create(
 
 
 @customer_router.get("/")
-async def get(request: Request, id_: UUID) -> CustomerSchema | None:
+async def get(request: Request, id_: UUID) -> CustomerSchema | IDNotFoundSchema:
     return await request.state.customer_services.get(id_=id_)
 
 
 @customer_router.delete("/")
-async def delete(request: Request, id_: UUID) -> CustomerDeleteSchema | None:
+async def delete(
+    request: Request, id_: UUID
+) -> CustomerDeleteSchema | IDNotFoundSchema:
     return await request.state.customer_services.delete(id_=id_)
 
 
 @customer_router.get("/by-{key}/{value}")
-async def get_by_field(request: Request, key: str, value: str) -> CustomerSchema | None:
+async def get_by_field(
+    request: Request, key: str, value: str
+) -> CustomerSchema | KeyValueNotFoundSchema:
     return await request.state.customer_services.get_by_field(key, value)
 
 

@@ -19,7 +19,6 @@ class WorkstationServices(MainServices[WorkstationModel, WorkstationSchema]):
     MODEL = WorkstationModel
     SCHEMA = WorkstationSchema
     repository: WorkstationRepository
-    # validator: CustomerValidator
     converter: WorkstationConverter
 
     async def create(self, schema: WorkstationCreateSchema) -> SCHEMA:

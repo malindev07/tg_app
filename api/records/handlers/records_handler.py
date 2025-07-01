@@ -14,16 +14,17 @@ from api.records.schema.record_schema import (
     RecordWithStaffSchema,
 )
 from api.response import KeyValueNotFoundSchema, IDNotFoundSchema, ValidationInfoSchema
+from api.url_settings import UrlPrefix
 
-record_router = APIRouter(prefix="/record", tags=["Record"])
+record_router = APIRouter(prefix=UrlPrefix.record, tags=["Record"])
 
 
 @record_router.post(
     "/",
-    status_code = status.HTTP_201_CREATED,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create(
-        request: Request, data: RecordCreateSchema
+    request: Request, data: RecordCreateSchema
 ) -> RecordSchema | ValidationInfoSchema:
 
     return await request.state.records_services.create(schema=data)
@@ -66,14 +67,24 @@ async def get_with_staff(request: Request, record_id: UUID) -> RecordWithStaffSc
     return await request.state.records_services.get_with_staff(record_id=record_id)
 
 
-@record_router.get("/{rec_date}/{workstation_id}/")
+@record_router.get("/workstation/{rec_date}/{workstation_id}/")
 async def get_by_date_and_workstation(
     request: Request,
     rec_date: date,
     workstation_id: UUID,
-    # start_time: str = Query(..., description="Start time in HH:MM format"),
-    # end_time: str = Query(..., description="End time in HH:MM format"),
 ) -> Sequence[RecordWithAssociationSchema]:
+
     return await request.state.records_services.get_by_date_and_workstation(
         rec_date, workstation_id
+    )
+
+
+@record_router.get("/staff/{rec_date}/{staff_id}/")
+async def get_by_date_and_staff(
+    request: Request,
+    rec_date: date,
+    staff_id: UUID,
+) -> Sequence[RecordWithAssociationSchema]:
+    return await request.state.records_services.get_by_date_and_staff(
+        rec_date, staff_id
     )

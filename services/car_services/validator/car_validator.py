@@ -10,7 +10,10 @@ class CarValidator:
 
     @staticmethod
     def _validate_gos_nomer(gos_nomer: str) -> dict[str, str]:
-        match = re.fullmatch(r"[АВЕКМНОРСТУХ]\d{3}[АВЕКМНОРСТУХ]{2}\d{2,3}", gos_nomer)
+        match = re.fullmatch(
+            r"^[АВЕКМНОРСТУХABEKMHOPCTYX]\d{3}[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\d{2}$",
+            gos_nomer,
+        )
         if match:
             return {}
         else:
@@ -22,7 +25,6 @@ class CarValidator:
         if len(vin) == 17:
             return {}
         else:
-
             return {vin: "Incorrect value"}
 
     def is_validate(self, vin: str, gos_nomer: str) -> ValidationInfoSchema:
