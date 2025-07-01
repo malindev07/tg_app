@@ -6,7 +6,6 @@ from uuid import UUID
 from sqlalchemy import func, ForeignKey, String, Date, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-
 from core.db.models.base import Base
 
 
@@ -21,7 +20,6 @@ class RecordModel(Base):
     __tablename__ = "records"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    client_id: Mapped[UUID] = mapped_column(ForeignKey("customers.id"), nullable=False)
     car_id: Mapped[UUID] = mapped_column(ForeignKey("cars.id"), nullable=False)
 
     reason: Mapped[str] = mapped_column(
@@ -34,8 +32,8 @@ class RecordModel(Base):
 
     record_date: Mapped[date] = mapped_column(Date, nullable=False)
 
-    start_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
-    end_time: Mapped[time] = mapped_column(Time(timezone=True), nullable=False)
+    start_time: Mapped[time] = mapped_column(Time(timezone=False), nullable=False)
+    end_time: Mapped[time] = mapped_column(Time(timezone=False), nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         server_default=func.now(), nullable=False
@@ -47,7 +45,3 @@ class RecordModel(Base):
     workstation_staff_associations: Mapped[
         list["WorkstationStaffRecordAssociationModel"]
     ] = relationship(back_populates="record", cascade="save-update, merge")
-
-    # workstation_staff_associations: Mapped["WorkstationStaffRecordAssociationModel"] = (
-    #     relationship(back_populates="record", cascade="save-update, merge")
-    # )

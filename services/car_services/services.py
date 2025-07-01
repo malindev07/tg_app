@@ -1,16 +1,14 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-
 from api.cars.schemas.car_schema import (
-
     CarCreateSchema,
     CarSchema,
     CarAlreadyExistsSchema,
-    CarValidationInfoSchema,
     CarDeletedSchema,
     CarPatchSchema,
 )
+from api.response import ValidationInfoSchema, IDNotFoundSchema, KeyValueNotFoundSchema
 from core.db.models import CarModel
 from repository.car_repository.repository import CarRepository
 from services.base_service import MainServices
@@ -28,9 +26,9 @@ class CarServices(MainServices[CarModel, CarSchema]):
 
     async def create(
         self, schema: CarCreateSchema
-    ) -> SCHEMA | CarAlreadyExistsSchema | CarValidationInfoSchema:
+    ) -> SCHEMA | CarAlreadyExistsSchema | ValidationInfoSchema:
 
-        validation_res: CarValidationInfoSchema = self.validator.is_validate(
+        validation_res = self.validator.is_validate(
             vin=schema.vin,
             gos_nomer=schema.gos_nomer,
         )
@@ -48,28 +46,33 @@ class CarServices(MainServices[CarModel, CarSchema]):
         model = await super().create(model=model_create)
         return await self.converter.model_to_schema(model=model)
 
-    async def get(self, id_: UUID) -> SCHEMA | None:
-        return await self.converter.model_to_schema(
-            await super().get(id_=id_),
-        )
+    async def get(self, id_: UUID) -> SCHEMA | IDNotFoundSchema:
+        customer = await super().get(id_=id_)
+        if customer:
+            return await self.converter.model_to_schema(
+                customer,
+            )
+        return IDNotFoundSchema(id_=id_)
 
-    async def delete(self, id_: UUID) -> CarDeletedSchema | None:
+    async def delete(self, id_: UUID) -> CarDeletedSchema | IDNotFoundSchema:
         obj = await super().delete(id_)
         if obj:
             return CarDeletedSchema(
                 data=await self.converter.model_to_schema(obj), msg="Object deleted"
             )
-        return obj
+        return IDNotFoundSchema(id_=id_)
 
-    async def get_by_field(self, key: str, value: str) -> SCHEMA | None:
+    async def get_by_field(
+        self, key: str, value: str
+    ) -> SCHEMA | KeyValueNotFoundSchema:
         obj = await super().get_by_field(key, value)
         if obj:
             return await self.converter.model_to_schema(obj)
-        return obj
+        return KeyValueNotFoundSchema(data={key: value})
 
-    async def partial_update(self, data: CarPatchSchema) -> SCHEMA | None:
+    async def partial_update(self, data: CarPatchSchema) -> SCHEMA | IDNotFoundSchema:
         model = await super().get(data.id)
         if model:
             upd_model = await super().patch(id_=data.id, data=data.data)
             return await self.converter.model_to_schema(upd_model)
-        return model
+        return IDNotFoundSchema(id_=data.id)

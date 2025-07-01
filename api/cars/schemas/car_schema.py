@@ -1,7 +1,22 @@
-from typing import Optional
+from typing import Optional, Any
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_validator
+
+TRANSLIT_MAP = {
+    "А": "A",
+    "В": "B",
+    "Е": "E",
+    "К": "K",
+    "М": "M",
+    "Н": "H",
+    "О": "O",
+    "Р": "P",
+    "С": "C",
+    "Т": "T",
+    "У": "Y",
+    "Х": "X",
+}
 
 
 class CarCreateSchema(BaseModel):
@@ -13,6 +28,10 @@ class CarCreateSchema(BaseModel):
     odometer_last: Optional[int] | None = None
     owner_id: UUID
 
+    @field_validator("gos_nomer")
+    def validate_time_format(cls, plate):
+        return "".join(TRANSLIT_MAP.get(letter, letter) for letter in plate)
+
 
 class CarGetByFieldSchema(BaseModel):
     key: str
@@ -20,7 +39,7 @@ class CarGetByFieldSchema(BaseModel):
 
 
 class CarValidationInfoSchema(BaseModel):
-    data: list = Field(default_factory=list)
+    data: list[dict[Any, Any]] = Field(default=[])
 
 
 class CarAlreadyExistsSchema(BaseModel):
@@ -30,7 +49,7 @@ class CarAlreadyExistsSchema(BaseModel):
 
 class CarPatchSchema(BaseModel):
     id: UUID
-    data: dict = Field(default_factory=dict)
+    data: dict[Any, Any] = Field(default={})
 
 
 class CarSchema(BaseModel):
@@ -40,7 +59,7 @@ class CarSchema(BaseModel):
     model: str
     vin: Optional[str] = Field(default=None)
     odometer_registered: int
-    odometer_last: Optional[int] = Field(default=None)
+    odometer_last: int
 
     model_config = ConfigDict(
         from_attributes=True,

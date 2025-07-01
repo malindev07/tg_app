@@ -10,5 +10,10 @@ class IDNotFoundSchema(BaseModel):
 
 
 class KeyValueNotFoundSchema(BaseModel):
-    data: dict[Any, Any]
+    data: dict[str, str]
     msg: str = Field(default="Not found")
+
+
+class ValidationInfoSchema(BaseModel):
+    name: str = Field(default="")
+    data: list[Any] = Field(default=[])

@@ -9,8 +9,9 @@ from api.staff.schema.staff_schema import (
     StaffSchema,
     StaffDeleteSchema,
 )
+from api.url_settings import UrlPrefix
 
-staff_router = APIRouter(prefix="/staff", tags=["Staff"])
+staff_router = APIRouter(prefix=UrlPrefix.staff, tags=["Staff"])
 
 
 @staff_router.post("/")

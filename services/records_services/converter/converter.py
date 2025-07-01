@@ -7,7 +7,6 @@ from api.records.schema.record_schema import (
     RecordWithAssociationSchema,
     RecordWithStaffSchema,
 )
-
 from core.db.models.records import RecordModel
 
 
@@ -17,7 +16,6 @@ class RecordConverter:
         self, schema: RecordSchema | RecordCreateSchema
     ) -> RecordModel:
         return RecordModel(
-            client_id=schema.client_id,
             car_id=schema.car_id,
             reason=schema.reason,
             comment=schema.comment,
@@ -28,7 +26,6 @@ class RecordConverter:
 
     async def model_to_schema(self, model: RecordModel) -> RecordSchema:
         return RecordSchema(
-            client_id=model.client_id,
             car_id=model.car_id,
             reason=model.reason,
             comment=model.comment,
@@ -39,13 +36,14 @@ class RecordConverter:
             status=model.status,
         )
 
-    async def model_with_staff_to_schema(self, model: RecordModel):
+    async def model_with_staff_to_schema(
+        self, model: RecordModel
+    ) -> RecordWithStaffSchema:
         staff_ids = [
             association.staff_id for association in model.workstation_staff_associations
         ]
 
         return RecordWithStaffSchema(
-            client_id=model.client_id,
             car_id=model.car_id,
             reason=model.reason,
             comment=model.comment,
@@ -72,7 +70,6 @@ class RecordConverter:
             ].workstation_id  # TODO ПОДУМАТЬ КАК ИСПРАВИТЬ
             records.append(
                 RecordWithAssociationSchema(
-                    client_id=model.client_id,
                     workstation_id=workstation_id,
                     car_id=model.car_id,
                     reason=model.reason,
