@@ -1,7 +1,9 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from typing import Sequence
 from uuid import UUID
+
+import httpx
 
 from api.records.schema.record_schema import (
     RecordCreateSchema,
@@ -12,6 +14,7 @@ from api.records.schema.record_schema import (
     RecordWithStaffSchema,
 )
 from api.response import IDNotFoundSchema, KeyValueNotFoundSchema, ValidationInfoSchema
+from api.workstations.schema.workstation_schema import WorkstationSchema
 from core.db.models.records import RecordModel
 from repository.records_repository.repository import RecordsRepository
 from services.base_service import MainServices
@@ -19,6 +22,12 @@ from services.records_services.converter.converter import RecordConverter
 from services.records_services.validator.record_validator import RecordValidator
 
 MIN_RECORD_TIME = 30
+
+
+async def call_workstation_get_endpoint(id_: UUID):
+    async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
+        response = await client.get(f"/workstation/", params={"id_": str(id_)})
+        return response.json()
 
 
 @dataclass
@@ -31,12 +40,20 @@ class RecordsServices(MainServices[RecordModel, RecordSchema]):
 
     async def create(self, schema: RecordCreateSchema) -> SCHEMA | ValidationInfoSchema:
 
+        ws = WorkstationSchema(
+            **await call_workstation_get_endpoint(id_=schema.workstation_id)
+        )
+
+        start_dt_new = datetime.combine(datetime.today(), schema.start_time)
+        end_dt_new = datetime.combine(datetime.today(), schema.end_time)
+
         validation_info = await self.validator.is_validate(
-            start_time=schema.start_time,
-            end_time=schema.end_time,
+            start_time=start_dt_new,
+            end_time=end_dt_new,
             records=await self.get_by_date_and_staff(
                 schema.record_date, schema.staff_id
             ),
+            workstation=ws,
         )
 
         if validation_info.data:

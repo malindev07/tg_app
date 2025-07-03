@@ -36,14 +36,16 @@ class CarServices(MainServices[CarModel, CarSchema]):
         if validation_res.data:
             return validation_res
 
-        obj = await super().get_by_field(key="gos_nomer", value=schema.gos_nomer)
+        obj = await self.repository.get_by_field(
+            key="gos_nomer", value=schema.gos_nomer
+        )
         if obj:
             return CarAlreadyExistsSchema(data=schema.gos_nomer)
 
         schema.odometer_last = schema.odometer_registered
 
         model_create = await self.converter.schema_to_model(schema=schema)
-        model = await super().create(model=model_create)
+        model = await self.repository.create(model=model_create)
         return await self.converter.model_to_schema(model=model)
 
     async def get(self, id_: UUID) -> SCHEMA | IDNotFoundSchema:

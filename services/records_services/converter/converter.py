@@ -64,7 +64,7 @@ class RecordConverter:
             staff_ids = [
                 association.staff_id
                 for association in model.workstation_staff_associations
-            ]
+            ]  # TODO ПОДУМАТЬ КАК ИСПРАВИТЬ
             workstation_id = model.workstation_staff_associations[
                 0
             ].workstation_id  # TODO ПОДУМАТЬ КАК ИСПРАВИТЬ
@@ -79,7 +79,7 @@ class RecordConverter:
                     end_time=model.end_time,
                     id=model.id,
                     status=model.status,
-                    staff_id=staff_ids,
+                    staff_id = staff_ids[0],
                 )
             )
         return records
