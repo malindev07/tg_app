@@ -25,6 +25,7 @@ from services.records_services.services import RecordsServices
 from services.records_services.validator.record_validator import RecordValidator
 from services.staff_services.converter.converter import StaffConverter
 from services.staff_services.services import StaffServices
+from services.staff_services.validator.validator import StaffValidator
 from services.workstation_services.converter.converter import WorkstationConverter
 from services.workstation_services.services import WorkstationServices
 
@@ -49,6 +50,7 @@ async def lifespan(app: FastAPI):
     staff_services = StaffServices(
         repository=StaffRepository(),
         converter=StaffConverter(),
+        validator = StaffValidator(),
     )
     workstation_services = WorkstationServices(
         repository=WorkstationRepository(),

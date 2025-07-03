@@ -1,7 +1,12 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
+from api.response import (
+    IDNotFoundSchema,
+    KeyValueNotFoundSchema,
+    ValidationInfoSchema,
+    AlreadyExistSchema,
+)
 from api.staff.schema.staff_schema import (
     StaffSchema,
     StaffDeleteSchema,
@@ -12,6 +17,7 @@ from core.db.models import StaffModel
 from repository.staff_repository.repository import StaffRepository
 from services.base_service import MainServices
 from services.staff_services.converter.converter import StaffConverter
+from services.staff_services.validator.validator import StaffValidator
 
 
 @dataclass
@@ -19,12 +25,21 @@ class StaffServices(MainServices[StaffModel, StaffSchema]):
     MODEL = StaffModel
     SCHEMA = StaffSchema
     repository: StaffRepository
-    # validator: CustomerValidator
+    validator: StaffValidator
     converter: StaffConverter
-
-    async def create(self, schema: StaffCreateSchema) -> SCHEMA:
-        obj = await super().create(await self.converter.schema_to_model(schema))
-
+    
+    async def create(
+            self, schema: StaffCreateSchema
+    ) -> SCHEMA | ValidationInfoSchema | AlreadyExistSchema:
+        validation_info = await self.validator.is_validate(schema.phone)
+        
+        if validation_info.data:
+            return validation_info
+        
+        if await self.repository.get_by_field(key = "phone", value = schema.phone):
+            return AlreadyExistSchema(data = schema.phone)
+        
+        obj = await self.repository.create(await self.converter.schema_to_model(schema))
         return await self.converter.model_to_schema(obj)
 
     async def get(self, id_: UUID) -> SCHEMA | IDNotFoundSchema:

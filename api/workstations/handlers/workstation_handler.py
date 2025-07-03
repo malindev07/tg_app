@@ -11,7 +11,7 @@ from api.workstations.schema.workstation_schema import (
     WorkstationPatchSchema,
 )
 
-workstation_router = APIRouter(prefix=UrlPrefix.workstation, tags=["workstation"])
+workstation_router = APIRouter(prefix=UrlPrefix.workstation, tags=["Workstation"])
 
 
 @workstation_router.post("/")

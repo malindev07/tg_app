@@ -17,3 +17,8 @@ class KeyValueNotFoundSchema(BaseModel):
 class ValidationInfoSchema(BaseModel):
     name: str = Field(default="")
     data: list[Any] = Field(default=[])
+
+
+class AlreadyExistSchema(BaseModel):
+    data: Any
+    msg: str = Field(default="Already exist")

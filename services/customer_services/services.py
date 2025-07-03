@@ -10,7 +10,7 @@ from api.customers.schemas.customer_schema import (
     CustomerAlreadyExistsSchema,
     CustomerCarsSchema,
 )
-from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
+from api.response import IDNotFoundSchema
 from core.db.models.customers import CustomerModel
 from repository.customers_repository.repository import CustomerRepository
 from services.base_service import MainServices
@@ -53,26 +53,24 @@ class CustomerServices(MainServices[CustomerModel, CustomerSchema]):
                 data=await self.converter.model_to_schema(obj), msg="Object deleted"
             )
         return IDNotFoundSchema(id_=id_)
-
-    async def get_by_field(
-        self, key: str, value: str
-    ) -> SCHEMA | KeyValueNotFoundSchema:
-        obj = await super().get_by_field(key, value)
+    
+    async def get_by_field(self, key: str, value: str) -> SCHEMA | None:
+        obj = await self.repository.get_by_field(key, value)
         if obj:
             return await self.converter.model_to_schema(obj)
-        return KeyValueNotFoundSchema(data={key: value})
+        return None
 
     async def partial_update(
         self, data: CustomerPatchSchema
     ) -> SCHEMA | IDNotFoundSchema:
-        model = await super().get(data.id)
+        model = await self.repository.get(data.id)
         if model:
             upd_model = await super().patch(id_=data.id, data=data.data)
             return await self.converter.model_to_schema(upd_model)
         return IDNotFoundSchema(id_=data.id)
 
     async def get_cars(self, id_: UUID) -> CustomerCarsSchema | IDNotFoundSchema:
-        obj = await super().get(id_=id_)
+        obj = await self.repository.get(id_ = id_)
         if obj is not None:
             cars = await self.repository.get_cars(id_)
             customer_cars = CustomerCarsSchema()

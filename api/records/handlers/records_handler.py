@@ -1,7 +1,6 @@
 from datetime import date
 from typing import Sequence
 from uuid import UUID
-
 from fastapi import APIRouter, Request
 from starlette import status
 
@@ -19,10 +18,7 @@ from api.url_settings import UrlPrefix
 record_router = APIRouter(prefix=UrlPrefix.record, tags=["Record"])
 
 
-@record_router.post(
-    "/",
-    status_code=status.HTTP_201_CREATED,
-)
+@record_router.post("/", status_code=status.HTTP_201_CREATED)
 async def create(
     request: Request, data: RecordCreateSchema
 ) -> RecordSchema | ValidationInfoSchema:
