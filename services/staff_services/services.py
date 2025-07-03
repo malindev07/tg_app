@@ -27,18 +27,18 @@ class StaffServices(MainServices[StaffModel, StaffSchema]):
     repository: StaffRepository
     validator: StaffValidator
     converter: StaffConverter
-    
+
     async def create(
-            self, schema: StaffCreateSchema
+        self, schema: StaffCreateSchema
     ) -> SCHEMA | ValidationInfoSchema | AlreadyExistSchema:
         validation_info = await self.validator.is_validate(schema.phone)
-        
+
         if validation_info.data:
             return validation_info
-        
-        if await self.repository.get_by_field(key = "phone", value = schema.phone):
-            return AlreadyExistSchema(data = schema.phone)
-        
+
+        if await self.repository.get_by_field(key="phone", value=schema.phone):
+            return AlreadyExistSchema(data=schema.phone)
+
         obj = await self.repository.create(await self.converter.schema_to_model(schema))
         return await self.converter.model_to_schema(obj)
 

@@ -14,14 +14,14 @@ from api.workstations.schema.workstation_schema import WorkstationSchema
 class RecordValidator:
     MIN_REPAIR_TIME: timedelta = timedelta(minutes=30)
     validation_name: str = "Record Validation"
-    
+
     @staticmethod
     async def _validate_start_end_time(
             start_time: datetime, end_time: datetime, workstation: WorkstationSchema
     ):
         start_dt_ws = datetime.combine(datetime.today(), workstation.start_time)
         end_dt_ws = datetime.combine(datetime.today(), workstation.end_time)
-        
+
         if start_dt_ws <= start_time and end_time <= end_dt_ws:
             return {}
         elif start_dt_ws > start_time:
@@ -32,7 +32,7 @@ class RecordValidator:
     async def _validate_record_time_distance(
             self, start_time: datetime, end_time: datetime
     ) -> dict[str, str]:
-        
+
         if end_time - start_time >= self.MIN_REPAIR_TIME:
             return {}
         else:

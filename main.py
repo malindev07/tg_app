@@ -50,7 +50,7 @@ async def lifespan(app: FastAPI):
     staff_services = StaffServices(
         repository=StaffRepository(),
         converter=StaffConverter(),
-        validator = StaffValidator(),
+        validator=StaffValidator(),
     )
     workstation_services = WorkstationServices(
         repository=WorkstationRepository(),
