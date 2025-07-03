@@ -53,7 +53,7 @@ class CustomerServices(MainServices[CustomerModel, CustomerSchema]):
                 data=await self.converter.model_to_schema(obj), msg="Object deleted"
             )
         return IDNotFoundSchema(id_=id_)
-    
+
     async def get_by_field(self, key: str, value: str) -> SCHEMA | None:
         obj = await self.repository.get_by_field(key, value)
         if obj:
@@ -70,7 +70,7 @@ class CustomerServices(MainServices[CustomerModel, CustomerSchema]):
         return IDNotFoundSchema(id_=data.id)
 
     async def get_cars(self, id_: UUID) -> CustomerCarsSchema | IDNotFoundSchema:
-        obj = await self.repository.get(id_ = id_)
+        obj = await self.repository.get(id_=id_)
         if obj is not None:
             cars = await self.repository.get_cars(id_)
             customer_cars = CustomerCarsSchema()
