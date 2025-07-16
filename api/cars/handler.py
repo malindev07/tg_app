@@ -3,7 +3,7 @@ from uuid import UUID
 import httpx
 from fastapi import APIRouter, Request
 
-from api.cars.schemas.car_schema import (
+from api.cars.schema import (
     CarCreateSchema,
     CarDeletedSchema,
     CarSchema,
@@ -11,9 +11,8 @@ from api.cars.schemas.car_schema import (
     CarPatchSchema,
 )
 from api.response import ValidationInfoSchema, IDNotFoundSchema
-from api.url_settings import UrlPrefix
 
-car_router = APIRouter(prefix=UrlPrefix.car, tags=["Car"])
+car_router = APIRouter(prefix="/car", tags=["Car"])
 
 
 async def call_customer_get_endpoint(id_: UUID):
@@ -31,7 +30,14 @@ async def create(
     return await request.state.car_services.create(schema=schema)
 
 
+@car_router.get("/")
+# Поиск всех сущностей
+async def get(request: Request, id_: UUID) -> CarSchema:
+    return await request.state.car_services.get(id_=id_)
+
+
 @car_router.get("/{id_}")
+# Поиск сущности по id
 async def get(request: Request, id_: UUID) -> CarSchema:
     return await request.state.car_services.get(id_=id_)
 

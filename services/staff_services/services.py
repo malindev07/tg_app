@@ -7,7 +7,7 @@ from api.response import (
     ValidationInfoSchema,
     AlreadyExistSchema,
 )
-from api.staff.schema.staff_schema import (
+from api.staff.schema import (
     StaffSchema,
     StaffDeleteSchema,
     StaffPatchSchema,
@@ -16,8 +16,8 @@ from api.staff.schema.staff_schema import (
 from core.db.models import StaffModel
 from repository.staff_repository.repository import StaffRepository
 from services.base_service import MainServices
-from services.staff_services.converter.converter import StaffConverter
-from services.staff_services.validator.validator import StaffValidator
+from services.staff_services.converter import StaffConverter
+from services.staff_services.validator import StaffValidator
 
 
 @dataclass

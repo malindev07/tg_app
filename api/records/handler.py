@@ -1,10 +1,11 @@
 from datetime import date
 from typing import Sequence
 from uuid import UUID
+
 from fastapi import APIRouter, Request
 from starlette import status
 
-from api.records.schema.record_schema import (
+from api.records.schema import (
     RecordCreateSchema,
     RecordPatchSchema,
     RecordSchema,
@@ -13,9 +14,8 @@ from api.records.schema.record_schema import (
     RecordWithStaffSchema,
 )
 from api.response import KeyValueNotFoundSchema, IDNotFoundSchema, ValidationInfoSchema
-from api.url_settings import UrlPrefix
 
-record_router = APIRouter(prefix=UrlPrefix.record, tags=["Record"])
+record_router = APIRouter(prefix="/record", tags=["Record"])
 
 
 @record_router.post("/", status_code=status.HTTP_201_CREATED)
@@ -26,12 +26,12 @@ async def create(
     return await request.state.records_services.create(schema=data)
 
 
-@record_router.get("/{id_}", response_model=RecordSchema | IDNotFoundSchema)
+@record_router.get("/", response_model=RecordSchema | IDNotFoundSchema)
 async def get(request: Request, id_: UUID) -> RecordSchema | IDNotFoundSchema:
     return await request.state.records_services.get(id_=id_)
 
 
-@record_router.delete("/{id_}", response_model=RecordDeleteSchema | IDNotFoundSchema)
+@record_router.delete("/", response_model=RecordDeleteSchema | IDNotFoundSchema)
 async def delete(request: Request, id_: UUID) -> RecordDeleteSchema | IDNotFoundSchema:
     # todo сделать проверку на возможность удаления, если невозможно удалить, менять статус записи
     return await request.state.records_services.delete(id_=id_)
@@ -51,7 +51,7 @@ async def patch(
     return await request.state.records_services.partial_update(data=data)
 
 
-@record_router.get("/{record_date}/")
+@record_router.get("/{record_date}")
 async def get_by_date(
     request: Request, record_date: date
 ) -> Sequence[RecordSchema] | None:
@@ -63,7 +63,8 @@ async def get_with_staff(request: Request, record_id: UUID) -> RecordWithStaffSc
     return await request.state.records_services.get_with_staff(record_id=record_id)
 
 
-@record_router.get("/workstation/{rec_date}/{workstation_id}/")
+# todo уточнить про урл
+@record_router.get("/workstation/{rec_date}/{workstation_id}")
 async def get_by_date_and_workstation(
     request: Request,
     rec_date: date,
@@ -75,7 +76,8 @@ async def get_by_date_and_workstation(
     )
 
 
-@record_router.get("/staff/{rec_date}/{staff_id}/")
+# todo уточнить про урл
+@record_router.get("/staff/{rec_date}/{staff_id}")
 async def get_by_date_and_staff(
     request: Request,
     rec_date: date,

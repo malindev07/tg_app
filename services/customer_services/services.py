@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from api.customers.schemas.customer_schema import (
+from api.customers.schema import (
     CustomerSchema,
     CustomerCreateSchema,
     CustomerDeleteSchema,
@@ -15,7 +15,7 @@ from core.db.models.customers import CustomerModel
 from repository.customers_repository.repository import CustomerRepository
 from services.base_service import MainServices
 from services.customer_services.converter import CustomerConverter
-from services.customer_services.validator.validator import CustomerValidator
+from services.customer_services.validator import CustomerValidator
 
 
 @dataclass

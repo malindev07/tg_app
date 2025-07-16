@@ -3,11 +3,11 @@ from datetime import datetime, timedelta
 from typing import Sequence
 from uuid import UUID
 
-from api.records.schema.record_schema import (
+from api.records.schema import (
     RecordWithAssociationSchema,
 )
 from api.response import ValidationInfoSchema
-from api.workstations.schema.workstation_schema import WorkstationSchema
+from api.workstations.schema import WorkstationSchema
 
 
 @dataclass

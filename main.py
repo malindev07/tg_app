@@ -3,30 +3,30 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
-from api.cars.handlers.car_handler import car_router
-from api.customers.handlers.customer_handler import customer_router
+from api.cars.handler import car_router
+from api.customers.handler import customer_router
 from api.health_check import health_router
-from api.records.handlers.records_handler import record_router
-from api.staff.handlers.staff_handler import staff_router
-from api.workstations.handlers.workstation_handler import workstation_router
+from api.records.handler import record_router
+from api.staff.handler import staff_router
+from api.workstations.handler import workstation_router
 from repository.car_repository.repository import CarRepository
 from repository.customers_repository.repository import CustomerRepository
 from repository.records_repository.repository import RecordsRepository
 from repository.staff_repository.repository import StaffRepository
 from repository.workstation_repository.repository import WorkstationRepository
-from services.car_services.converter.car_converter import CarConverter
+from services.car_services.converter import CarConverter
 from services.car_services.services import CarServices
-from services.car_services.validator.car_validator import CarValidator
+from services.car_services.validator import CarValidator
 from services.customer_services.converter import CustomerConverter
 from services.customer_services.services import CustomerServices
-from services.customer_services.validator.validator import CustomerValidator
-from services.records_services.converter.converter import RecordConverter
+from services.customer_services.validator import CustomerValidator
+from services.records_services.converter import RecordConverter
 from services.records_services.services import RecordsServices
-from services.records_services.validator.record_validator import RecordValidator
-from services.staff_services.converter.converter import StaffConverter
+from services.records_services.validator import RecordValidator
+from services.staff_services.converter import StaffConverter
 from services.staff_services.services import StaffServices
-from services.staff_services.validator.validator import StaffValidator
-from services.workstation_services.converter.converter import WorkstationConverter
+from services.staff_services.validator import StaffValidator
+from services.workstation_services.converter import WorkstationConverter
 from services.workstation_services.services import WorkstationServices
 
 

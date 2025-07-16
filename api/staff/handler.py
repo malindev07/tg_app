@@ -8,20 +8,19 @@ from api.response import (
     ValidationInfoSchema,
     AlreadyExistSchema,
 )
-from api.staff.schema.staff_schema import (
+from api.staff.schema import (
     StaffCreateSchema,
     StaffPatchSchema,
     StaffSchema,
     StaffDeleteSchema,
 )
-from api.url_settings import UrlPrefix
 
-staff_router = APIRouter(prefix=UrlPrefix.staff, tags=["Staff"])
+staff_router = APIRouter(prefix="/staff", tags=["Staff"])
 
 
 @staff_router.post("/")
 async def create(
-        request: Request, data: StaffCreateSchema
+    request: Request, data: StaffCreateSchema
 ) -> StaffSchema | ValidationInfoSchema | AlreadyExistSchema:
     return await request.state.staff_services.create(schema=data)
 
