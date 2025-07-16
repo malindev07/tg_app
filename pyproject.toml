@@ -1,0 +1,24 @@
+[project]
+name = "car"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "malindev07",email = "malindev07@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "uvicorn[standard] (>=0.34.0,<0.35.0)",
+    "fastapi[standard] (>=0.115.8,<0.116.0)",
+    "sqlalchemy[standard] (>=2.0.37,<3.0.0)",
+    "asyncpg[standard] (>=0.30.0,<0.31.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.16.0"
+
