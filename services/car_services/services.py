@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from api.cars.schemas.car_schema import (
+from api.cars.schema import (
     CarCreateSchema,
     CarSchema,
     CarAlreadyExistsSchema,
@@ -12,8 +12,8 @@ from api.response import ValidationInfoSchema, IDNotFoundSchema, KeyValueNotFoun
 from core.db.models import CarModel
 from repository.car_repository.repository import CarRepository
 from services.base_service import MainServices
-from services.car_services.converter.car_converter import CarConverter
-from services.car_services.validator.car_validator import CarValidator
+from services.car_services.converter import CarConverter
+from services.car_services.validator import CarValidator
 
 
 @dataclass

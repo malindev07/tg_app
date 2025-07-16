@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Request
 
-from api.customers.schemas.customer_schema import (
+from api.customers.schema import (
     CustomerCreateSchema,
     CustomerSchema,
     CustomerDeleteSchema,
@@ -12,9 +12,8 @@ from api.customers.schemas.customer_schema import (
     CustomerCarsSchema,
 )
 from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
-from api.url_settings import UrlPrefix
 
-customer_router = APIRouter(prefix=UrlPrefix.customer, tags=["Customer"])
+customer_router = APIRouter(prefix="/customer", tags=["Customer"])
 
 
 @customer_router.post("/")
@@ -44,10 +43,14 @@ async def get_by_field(
 
 
 @customer_router.patch("/")
-async def patch(request: Request, data: CustomerPatchSchema) -> CustomerSchema | None:
+async def patch(
+    request: Request, data: CustomerPatchSchema
+) -> CustomerSchema | IDNotFoundSchema:
     return await request.state.customer_services.partial_update(data=data)
 
 
-@customer_router.get("/{id_}/cars")
-async def get_cars(request: Request, id_: UUID) -> CustomerCarsSchema | None:
+@customer_router.get("/cars/{id_}")
+async def get_cars(
+    request: Request, id_: UUID
+) -> CustomerCarsSchema | IDNotFoundSchema:
     return await request.state.customer_services.get_cars(id_)

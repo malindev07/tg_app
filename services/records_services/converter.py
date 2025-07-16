@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Sequence
 
-from api.records.schema.record_schema import (
+from api.records.schema import (
     RecordSchema,
     RecordCreateSchema,
     RecordWithAssociationSchema,
@@ -79,7 +79,7 @@ class RecordConverter:
                     end_time=model.end_time,
                     id=model.id,
                     status=model.status,
-                    staff_id = staff_ids[0],
+                    staff_id=staff_ids[0],
                 )
             )
         return records

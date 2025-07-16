@@ -5,7 +5,7 @@ from uuid import UUID
 
 import httpx
 
-from api.records.schema.record_schema import (
+from api.records.schema import (
     RecordCreateSchema,
     RecordSchema,
     RecordDeleteSchema,
@@ -14,12 +14,12 @@ from api.records.schema.record_schema import (
     RecordWithStaffSchema,
 )
 from api.response import IDNotFoundSchema, KeyValueNotFoundSchema, ValidationInfoSchema
-from api.workstations.schema.workstation_schema import WorkstationSchema
+from api.workstations.schema import WorkstationSchema
 from core.db.models.records import RecordModel
 from repository.records_repository.repository import RecordsRepository
 from services.base_service import MainServices
-from services.records_services.converter.converter import RecordConverter
-from services.records_services.validator.record_validator import RecordValidator
+from services.records_services.converter import RecordConverter
+from services.records_services.validator import RecordValidator
 
 MIN_RECORD_TIME = 30
 

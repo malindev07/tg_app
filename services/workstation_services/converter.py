@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from api.workstations.schema.workstation_schema import (
+from api.workstations.schema import (
     WorkstationSchema,
     WorkstationCreateSchema,
 )

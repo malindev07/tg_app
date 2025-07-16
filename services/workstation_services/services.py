@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from api.response import IDNotFoundSchema, KeyValueNotFoundSchema
-from api.workstations.schema.workstation_schema import (
+from api.workstations.schema import (
     WorkstationDeleteSchema,
     WorkstationCreateSchema,
     WorkstationSchema,
@@ -11,7 +11,7 @@ from api.workstations.schema.workstation_schema import (
 from core.db.models import WorkstationModel
 from repository.workstation_repository.repository import WorkstationRepository
 from services.base_service import MainServices
-from services.workstation_services.converter.converter import WorkstationConverter
+from services.workstation_services.converter import WorkstationConverter
 
 
 @dataclass

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from api.staff.schema.staff_schema import StaffSchema, StaffCreateSchema
+from api.staff.schema import StaffSchema, StaffCreateSchema
 from core.db.models import StaffModel
 
 

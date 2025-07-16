@@ -1,7 +1,7 @@
 from typing import Optional, Any
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 TRANSLIT_MAP = {
     "А": "A",
@@ -61,10 +61,10 @@ class CarSchema(BaseModel):
     odometer_registered: int
     odometer_last: int
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        populate_by_name=True,
-    )
+    # model_config = ConfigDict(
+    #     from_attributes=True,
+    #     populate_by_name=True,
+    # )
 
 
 class CarDeletedSchema(BaseModel):

@@ -3,15 +3,14 @@ from uuid import UUID
 from fastapi import APIRouter, Request
 
 from api.response import KeyValueNotFoundSchema, IDNotFoundSchema
-from api.url_settings import UrlPrefix
-from api.workstations.schema.workstation_schema import (
+from api.workstations.schema import (
     WorkstationCreateSchema,
     WorkstationSchema,
     WorkstationDeleteSchema,
     WorkstationPatchSchema,
 )
 
-workstation_router = APIRouter(prefix=UrlPrefix.workstation, tags=["Workstation"])
+workstation_router = APIRouter(prefix="/workstation", tags=["Workstation"])
 
 
 @workstation_router.post("/")
