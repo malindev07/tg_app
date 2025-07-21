@@ -20,12 +20,20 @@ TRANSLIT_MAP = {
 
 
 class CarCreateSchema(BaseModel):
-    gos_nomer: str
-    brand: str
-    model: str
-    vin: Optional[str] | None = None
-    odometer_registered: int
-    odometer_last: Optional[int] | None = None
+    gos_nomer: str = Field(
+        description="Госномер автомобиля", examples=["А111АА11", "С867ХЕ790"]
+    )
+    brand: str = Field(description="Марка автомобиля", examples=["BMW", "KIA"])
+    model: str = Field(description="Модель автомобиля", examples=["X3", "RIO"])
+    vin: str | None = Field(
+        default=None,
+        description="VIN автомобиля из 17 символов",
+        examples=["XWET1234ERT345678"],
+    )
+    odometer_registered: int = Field(
+        description="Пробег автомобиля", examples=["193000", "1000"]
+    )
+    odometer_last: int | None = None
     owner_id: UUID
 
     @field_validator("gos_nomer")
@@ -38,10 +46,6 @@ class CarGetByFieldSchema(BaseModel):
     value: str
 
 
-class CarValidationInfoSchema(BaseModel):
-    data: list[dict[Any, Any]] = Field(default=[])
-
-
 class CarAlreadyExistsSchema(BaseModel):
     data: str
     msg: str = Field(default="Already exists")
@@ -49,7 +53,7 @@ class CarAlreadyExistsSchema(BaseModel):
 
 class CarPatchSchema(BaseModel):
     id: UUID
-    data: dict[Any, Any] = Field(default={})
+    data: dict[str, Any] = Field(default_factory=dict)
 
 
 class CarSchema(BaseModel):
@@ -57,14 +61,9 @@ class CarSchema(BaseModel):
     gos_nomer: str
     brand: str
     model: str
-    vin: Optional[str] = Field(default=None)
+    vin: str | None = None
     odometer_registered: int
     odometer_last: int
-
-    # model_config = ConfigDict(
-    #     from_attributes=True,
-    #     populate_by_name=True,
-    # )
 
 
 class CarDeletedSchema(BaseModel):

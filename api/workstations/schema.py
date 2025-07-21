@@ -24,9 +24,10 @@ class WorkstationCreateSchema(BaseModel):
             raise ValueError("Неверный форматы времени. Используйте ЧЧ:ММ")
 
 
+# todo Уточнить у Артема ( например, "post_number":1" )
 class WorkstationPatchSchema(BaseModel):
     id: UUID
-    data: dict[Any, Any] = Field(default={})
+    data: dict[str, Any] = Field(default_factory=dict)
 
 
 class WorkstationSchema(BaseModel):

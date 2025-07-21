@@ -9,13 +9,13 @@ from api.cars.schema import CarSchema
 class CustomerCreateSchema(BaseModel):
     first_name: str
     last_name: str
-    middle_name: Optional[str] = Field(default=None)
+    middle_name: str | None = None
     phone: str
 
 
 class CustomerPatchSchema(BaseModel):
     id: UUID
-    data: dict[Any, Any] = Field(default={})
+    data: dict[str, Any] = Field(default_factory=dict)
 
 
 class CustomerValidateErrorPhoneSchema(BaseModel):
@@ -36,11 +36,11 @@ class CustomerSchema(BaseModel):
     id: UUID
     first_name: str
     last_name: str
-    middle_name: Optional[str] = Field(default=None)
+    middle_name: str | None = None
     phone: str
-    is_verify: bool = Field(default=False)
-    tg_id: Optional[str] = Field(default=None)
-    discount: int = Field(default=0)
+    is_verify: bool = False
+    tg_id: str | None = None
+    discount: int = 0
 
 
 class CustomerDeleteSchema(BaseModel):

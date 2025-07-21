@@ -1,3 +1,4 @@
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -9,7 +10,15 @@ class StaffCreateSchema(BaseModel):
     first_name: str
     last_name: str
     middle_name: str
-    position: StaffPosition = Field(default=StaffPosition.JUNIOR_MASTER)
+    position: StaffPosition = Field(
+        default=StaffPosition.JUNIOR_MASTER,
+        description="""
+            SENIOR_MASTER = "Старший мастер"
+            MIDDLE_MASTER = "Мастер"
+            JUNIOR_MASTER = "Младший мастер"
+            TRAINEE = "Стажер"
+    """,
+    )
     phone: str
     salary_rate: float
     comment: str
@@ -17,7 +26,7 @@ class StaffCreateSchema(BaseModel):
 
 class StaffPatchSchema(BaseModel):
     id: UUID
-    data: dict[str, str] = Field(default={})
+    data: dict[str, Any] = Field(default_factory=dict)
 
 
 class StaffSchema(BaseModel):
